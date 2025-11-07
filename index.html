@@ -3,72 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Daily HTML Projects</title>
+    <title>NIST Subject-Wise Tests</title>
     <style>
+        /* General Reset and Base Styles */
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
-            padding: 20px;
-            background-color: #f4f4f9;
+            padding: 0;
+            background-color: #eef2f5; /* Light, soft background */
             color: #333;
             text-align: center;
         }
-        .container {
-            max-width: 600px;
+        .header-container {
+            background-color: #007BFF;
+            color: white;
+            padding: 30px 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        .header-container h1 {
+            margin: 0 0 5px 0;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+        .header-container h2 {
+            margin: 0;
+            font-size: 1.1em;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        .main-content {
+            max-width: 1000px;
             margin: 0 auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 0 20px 40px 20px;
         }
-        h1 {
-            color: #007BFF;
-            margin-bottom: 20px;
-            font-size: 2em;
-        }
-        p {
-            color: #555;
-        }
-        .link-list {
+        
+        /* Card Grid Layout */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
             list-style: none;
             padding: 0;
+            margin-top: 20px;
         }
-        .link-list li {
-            margin: 15px 0;
+
+        /* Card Styling and 3D Effect */
+        .card-grid li {
+            perspective: 1000px; /* For 3D transform */
         }
-        .link-list a {
+        .subject-card {
             display: block;
-            padding: 15px;
-            background-color: #e9ecef;
-            color: #007BFF;
             text-decoration: none;
-            border-radius: 6px;
-            transition: background-color 0.3s, transform 0.1s;
-            font-size: 1.1em;
-            border: 1px solid #ced4da;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 0 0 2px rgba(0, 123, 255, 0.5); /* 3D-like shadow and border glow */
+            color: #333;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: left;
+            border-left: 5px solid #007BFF;
         }
-        .link-list a:hover {
-            background-color: #d1d5db;
+        
+        /* Hover Animation */
+        .subject-card:hover {
+            transform: translateY(-8px) rotateX(1deg); /* Lift and slight 3D rotation */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 0 0 3px #0056b3; /* Enhanced shadow and glow on hover */
+            background-color: #f7f9fb;
+        }
+
+        .subject-card strong {
+            display: block;
+            font-size: 1.5em;
+            color: #007BFF;
+            margin-bottom: 5px;
+        }
+        .subject-card span {
+            display: block;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        /* Footer */
+        .footer-text {
+            margin-top: 40px;
+            padding: 20px 0;
+            font-size: 1.2em;
             color: #0056b3;
-            transform: translateY(-2px);
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to My Daily HTML Projects! 📘</h1>
-        <p>Click on any of the links below to open and start the quiz.</p>
-        <ul class="link-list">
-            <li><a href="physiology.html">1. Physiology</a></li>
-            <li><a href="micro radio.html">2. Micro and Radio</a></li>
-            <li><a href="fmt.html">3. FMT</a></li>
-            <li><a href="anasthesia.html">4. Anasthesia</a></li>
-            <li><a href="paediatrics.html">5. Paediatrics</a></li>
-        </ul>
-        <p>These files are fully playable when opened! Enjoy!</p>
+
+    <div class="header-container">
+        <h1>Welcome to NIST Subject-Wise Tests 📚</h1>
+        <h2>Created by Mano</h2>
     </div>
+
+    <div class="main-content">
+        <p style="margin-bottom: 30px; font-size: 1.1em; color: #555;">Click on any of the cards below to open the corresponding test.</p>
+
+        <ul class="card-grid">
+            <li>
+                <a href="physiology.html" class="subject-card">
+                    <strong>1. Physiology</strong>
+                    <span>Test your knowledge in Physiology.</span>
+                </a>
+            </li>
+            <li>
+                <a href="micro radio.html" class="subject-card">
+                    <strong>2. Micro and Radio</strong>
+                    <span>Quizzes on Microbiology and Radiology.</span>
+                </a>
+            </li>
+            <li>
+                <a href="fmt.html" class="subject-card" style="border-left-color: #ffc107;">
+                    <strong>3. FMT</strong>
+                    <span>Practice for Forensic Medicine and Toxicology.</span>
+                </a>
+            </li>
+            <li>
+                <a href="anasthesia.html" class="subject-card" style="border-left-color: #20c997;">
+                    <strong>4. Anesthesia</strong>
+                    <span>Test your Anesthesia skills.</span>
+                </a>
+            </li>
+            <li>
+                <a href="paediatrics.html" class="subject-card" style="border-left-color: #dc3545;">
+                    <strong>5. Paediatrics</strong>
+                    <span>Quizzes dedicated to Paediatrics.</span>
+                </a>
+            </li>
+        </ul>
+
+        <p class="footer-text">
+            ALL THE BEST. enjoy! 🎉
+        </p>
+    </div>
+
 </body>
-
 </html>
-
-
