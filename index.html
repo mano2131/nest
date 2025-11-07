@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NIST Subject-Wise Tests</title>
+    <title>Login - NIST Subject-Wise Tests</title>
     <style>
-        /* General Reset and Base Styles */
+        /* (The CSS styles from the previous version are still included here) */
+        /* General Setup */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #eef2f5; /* Light, soft background */
+            background-color: #eef2f5;
             color: #333;
             text-align: center;
         }
@@ -37,6 +38,50 @@
             margin: 0 auto;
             padding: 0 20px 40px 20px;
         }
+
+        /* Login Screen Styles */
+        #login-screen {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 50px auto;
+        }
+        #username-input, #password-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        #login-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #login-button:hover {
+            background-color: #0056b3;
+        }
+        #error-message {
+            color: #dc3545;
+            margin-top: 10px;
+            font-weight: bold;
+            display: none;
+        }
+
+        /* --- TEST LIST STYLES (Hidden by default) --- */
+        #test-list-container {
+            display: none;
+        }
         
         /* Card Grid Layout */
         .card-grid {
@@ -49,16 +94,13 @@
         }
 
         /* Card Styling and 3D Effect */
-        .card-grid li {
-            perspective: 1000px; /* For 3D transform */
-        }
         .subject-card {
             display: block;
             text-decoration: none;
             padding: 30px;
             background: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 0 0 2px rgba(0, 123, 255, 0.5); /* 3D-like shadow and border glow */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 0 0 2px rgba(0, 123, 255, 0.5); 
             color: #333;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             text-align: left;
@@ -67,8 +109,8 @@
         
         /* Hover Animation */
         .subject-card:hover {
-            transform: translateY(-8px) rotateX(1deg); /* Lift and slight 3D rotation */
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 0 0 3px #0056b3; /* Enhanced shadow and glow on hover */
+            transform: translateY(-8px) rotateX(1deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 0 0 3px #0056b3;
             background-color: #f7f9fb;
         }
 
@@ -83,8 +125,6 @@
             color: #6c757d;
             font-size: 0.9em;
         }
-
-        /* Footer */
         .footer-text {
             margin-top: 40px;
             padding: 20px 0;
@@ -102,45 +142,121 @@
     </div>
 
     <div class="main-content">
-        <p style="margin-bottom: 30px; font-size: 1.1em; color: #555;">Click on any of the cards below to open the corresponding test.</p>
+        
+        <div id="login-screen">
+            <h3 style="font-size: 1.5em; margin-bottom: 20px; color: #007BFF;">Authorized Access Only</h3>
+            <input type="text" id="username-input" placeholder="Enter User ID">
+            <input type="password" id="password-input" placeholder="Enter Password">
+            <button id="login-button">Unlock Tests</button>
+            <p id="error-message">Invalid User ID or Password.</p>
+        </div>
 
-        <ul class="card-grid">
-            <li>
-                <a href="physiology.html" class="subject-card">
-                    <strong>1. Physiology</strong>
-                    <span>Test your knowledge in Physiology.</span>
-                </a>
-            </li>
-            <li>
-                <a href="micro radio.html" class="subject-card">
-                    <strong>2. Micro and Radio</strong>
-                    <span>Quizzes on Microbiology and Radiology.</span>
-                </a>
-            </li>
-            <li>
-                <a href="fmt.html" class="subject-card" style="border-left-color: #ffc107;">
-                    <strong>3. FMT</strong>
-                    <span>Practice for Forensic Medicine and Toxicology.</span>
-                </a>
-            </li>
-            <li>
-                <a href="anasthesia.html" class="subject-card" style="border-left-color: #20c997;">
-                    <strong>4. Anesthesia</strong>
-                    <span>Test your Anesthesia skills.</span>
-                </a>
-            </li>
-            <li>
-                <a href="paediatrics.html" class="subject-card" style="border-left-color: #dc3545;">
-                    <strong>5. Paediatrics</strong>
-                    <span>Quizzes dedicated to Paediatrics.</span>
-                </a>
-            </li>
-        </ul>
+        <div id="test-list-container">
+            <p style="margin-bottom: 30px; font-size: 1.1em; color: #555;">Click on any of the cards below to open the corresponding test.</p>
 
-        <p class="footer-text">
-            ALL THE BEST. enjoy! 🎉
-        </p>
+            <ul class="card-grid">
+                <li>
+                    <a href="physiology.html" class="subject-card">
+                        <strong>1. Physiology</strong>
+                        <span>Test your knowledge in Physiology.</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="micro radio.html" class="subject-card">
+                        <strong>2. Micro and Radio</strong>
+                        <span>Quizzes on Microbiology and Radiology.</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="fmt.html" class="subject-card" style="border-left-color: #ffc107;">
+                        <strong>3. FMT</strong>
+                        <span>Practice for Forensic Medicine and Toxicology.</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="anasthesia.html" class="subject-card" style="border-left-color: #20c997;">
+                        <strong>4. Anesthesia</strong>
+                        <span>Test your Anesthesia skills.</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="paediatrics.html" class="subject-card" style="border-left-color: #dc3545;">
+                        <strong>5. Paediatrics</strong>
+                        <span>Quizzes dedicated to Paediatrics.</span>
+                    </a>
+                </li>
+                </ul>
+
+            <p class="footer-text">
+                ALL THE BEST. enjoy! 🎉
+            </p>
+        </div>
     </div>
 
+    <script>
+        // --- IMPORTANT: CUSTOMIZE THESE 10 USER CREDENTIALS ---
+        const USER_CREDENTIALS = {
+            // "username": "password",
+            "mano01": "passNIST1", 
+            "mano02": "passNIST2",
+            "mano03": "passNIST3",
+            "mano04": "passNIST4",
+            "mano05": "passNIST5",
+            "mano06": "passNIST6",
+            "mano07": "passNIST7",
+            "mano08": "passNIST8",
+            "mano09": "passNIST9",
+            "mano10": "passNIST10"
+        };
+        // ----------------------------------------------------
+
+        const loginScreen = document.getElementById('login-screen');
+        const testListContainer = document.getElementById('test-list-container');
+        const usernameInput = document.getElementById('username-input');
+        const passwordInput = document.getElementById('password-input');
+        const loginButton = document.getElementById('login-button');
+        const errorMessage = document.getElementById('error-message');
+
+        function attemptLogin() {
+            const username = usernameInput.value.trim().toLowerCase();
+            const password = passwordInput.value.trim();
+
+            if (USER_CREDENTIALS.hasOwnProperty(username) && USER_CREDENTIALS[username] === password) {
+                // SUCCESS: Hide login and show tests
+                loginScreen.style.display = 'none';
+                testListContainer.style.display = 'block';
+                errorMessage.style.display = 'none';
+                
+                // Store access status and username in the browser for this session
+                sessionStorage.setItem('accessGranted', 'true');
+                sessionStorage.setItem('loggedInUser', username);
+            } else {
+                // FAILURE: Show error
+                passwordInput.value = ''; // Clear the password input
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        // Check if access was previously granted (so the user doesn't have to re-login after refresh)
+        if (sessionStorage.getItem('accessGranted') === 'true' && sessionStorage.getItem('loggedInUser')) {
+             loginScreen.style.display = 'none';
+             testListContainer.style.display = 'block';
+        }
+
+        // Event listeners
+        loginButton.addEventListener('click', attemptLogin);
+        passwordInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                attemptLogin();
+            }
+        });
+        usernameInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                attemptLogin();
+            }
+        });
+    </script>
 </body>
 </html>
