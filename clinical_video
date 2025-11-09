@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Procedure Video</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f7f9; }
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="p-4">
+    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-lg p-6">
+        <h1 class="text-3xl font-bold mb-4 text-blue-700 border-b pb-2">Clinical Procedure Training</h1>
+        <p class="text-gray-600 mb-6">Watch this video demonstration on lung physiology before attempting the quiz questions.</p>
+
+        <div class="video-container mb-6">
+            <iframe 
+                src="https://www.youtube.com/embed/u-QG4Fy-tSg" 
+                title="Clinical Procedure Video" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" 
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <div class="text-center mt-8">
+            <a href="index.html" class="inline-block px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition duration-300">
+                ← Back to Subject Tests
+            </a>
+        </div>
+    </div>
+</body>
+</html>
