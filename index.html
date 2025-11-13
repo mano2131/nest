@@ -6,11 +6,6 @@
     <title>Login - NIST Subject-Wise Tests</title>
     <style>
         /* General Setup */
-        /*
-           1. Set the ID for the Vanta.js script to target.
-           2. Remove old background properties.
-           3. Ensure all content layers are positioned above the animation (z-index).
-        */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
@@ -18,7 +13,6 @@
             color: white; 
             text-align: center;
             position: relative;
-            /* This ID is used by VANTA.js script below */
             min-height: 100vh;
             background-color: #000030; /* Fallback background color */
         }
@@ -68,25 +62,38 @@
             z-index: 2; /* Keep content above the animation */
         }
 
-        /* Login Screen Styles */
+        /* Login Screen Styles (Glassmorphism Effect) */
         #login-screen {
-            background: rgba(255, 255, 255, 0.95); /* Adjusted for semi-transparent white */
+            /* Glass Background: highly transparent white/gray */
+            background: rgba(255, 255, 255, 0.15); 
+            /* Blur effect */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); /* For Safari support */
+            
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Stronger shadow on dark background */
+            /* Lighter shadow and border for the glass effect */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); 
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            
             max-width: 400px;
             margin: 50px auto;
-            color: #333; /* Ensure login text is dark on the white box */
+            color: white; /* Ensure text is white for readability on dark glass */
+        }
+        #login-screen h3 {
+             color: white !important; /* Keep the title visible */
         }
         #username-input, #password-input {
             width: 100%;
             padding: 12px;
             margin-bottom: 15px;
+            /* Keep inputs as solid white boxes for usability */
             border: 1px solid #ced4da;
+            background-color: white; 
             border-radius: 6px;
             box-sizing: border-box;
             font-size: 1em;
-            color: #333; /* Ensure input text is readable */
+            color: #333; 
         }
         #login-button {
             width: 100%;
@@ -124,15 +131,24 @@
             margin-top: 20px;
         }
 
-        /* Card Styling and 3D Effect */
+        /* Card Styling and 3D Effect (Glassmorphism Effect) */
         .subject-card {
             display: block;
             text-decoration: none;
             padding: 30px;
-            background: #ffffff;
+            
+            /* Glass Background: highly transparent white/gray */
+            background: rgba(255, 255, 255, 0.15); 
+            /* Blur effect */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); 
+
             border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 0 0 2px rgba(0, 123, 255, 0.5); 
-            color: #333;
+            /* Lighter shadow and border for the glass effect */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); 
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            
+            color: white; /* General text color for card */
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             text-align: left;
             border-left: 5px solid #007BFF;
@@ -141,32 +157,33 @@
         /* Hover Animation */
         .subject-card:hover {
             transform: translateY(-8px) rotateX(1deg);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 0 0 3px #0056b3;
-            background-color: #f7f9fb;
+            /* Slightly less transparent on hover */
+            background-color: rgba(255, 255, 255, 0.3); 
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 0 3px #0056b3;
         }
 
         .subject-card strong {
             display: block;
             font-size: 1.5em;
-            color: #007BFF;
+            color: white; /* Changed for dark background contrast */
             margin-bottom: 5px;
         }
         .subject-card span {
             display: block;
-            color: #6c757d;
+            color: lightgray; /* Changed for dark background contrast */
             font-size: 0.9em;
         }
         .footer-text {
             margin-top: 40px;
             padding: 20px 0;
             font-size: 1.2em;
-            color: #0056b3;
+            color: #fff; /* Changed to white for better visibility */
             font-weight: bold;
             position: relative;
             z-index: 2; /* Keep footer above the animation */
         }
         
-        /* Ensure the white box of the login form has a higher z-index than the animation */
+        /* Ensure the containers have a higher z-index than the animation */
         #login-screen, #test-list-container {
             position: relative;
             z-index: 10;
@@ -181,7 +198,7 @@
     <div class="main-content">
         
         <div id="login-screen">
-            <h3 style="font-size: 1.5em; margin-bottom: 20px; color: #007BFF;">Authorized Access Only</h3>
+            <h3 style="font-size: 1.5em; margin-bottom: 20px; color: white;">Authorized Access Only</h3>
             <input type="text" id="username-input" placeholder="Enter User ID">
             <input type="password" id="password-input" placeholder="Enter Password">
             <button id="login-button">Unlock Tests</button>
@@ -256,10 +273,10 @@
             minWidth: 200.00,
             scale: 1.00,
             scaleMobile: 1.00,
-            backgroundColor: 0x21214a, // Dark purple/blue background
-            color1: 0x007BFF, // Using your blue primary color
+            backgroundColor: 0x21214a, 
+            color1: 0x007BFF, 
             colorMode: "variance",
-            birdSize: 1.50, // Slightly smaller birds
+            birdSize: 1.50, 
             speedLimit: 5.00
         });
         
