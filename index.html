@@ -9,10 +9,8 @@
     <meta name="apple-mobile-web-app-title" content="SWT Portal">
     <meta name="description" content="NIST & SUNRISE Student Portal">
 
-    <!-- PWA Manifest Link -->
     <link rel="manifest" href="manifest.json">
     
-    <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💠</text></svg>">
 
     <title>NIST & SUNRISE - Portal</title>
@@ -23,7 +21,7 @@
             --bg-color: #050510;
             --neon-blue: #00c6ff;
             --neon-purple: #bd34fe;
-            --glass-bg: rgba(0, 0, 0, 0.4);
+            --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
             --text-main: #ffffff;
             --text-sec: rgba(255, 255, 255, 0.7);
@@ -39,7 +37,7 @@
             --bg-color: #e8ecf1;
             --neon-blue: #0069d9; 
             --neon-purple: #800080;
-            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-bg: rgba(255, 255, 255, 0.6);
             --glass-border: rgba(255, 255, 255, 0.6);
             --text-main: #1a1a2e; 
             --text-sec: #4a4a6a;
@@ -55,6 +53,7 @@
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
+        /* --- SECURITY & NO SELECT --- */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
@@ -64,7 +63,13 @@
             min-height: 100vh;
             background-color: var(--bg-color);
             overflow-x: hidden; 
+            
+            /* DISABLE SELECTION & LONG PRESS */
             user-select: none;
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+/Edge */
+            -webkit-touch-callout: none; /* iOS Safari Long Press */
             -webkit-tap-highlight-color: transparent;
         }
         
@@ -76,6 +81,7 @@
             top: 0;
             left: 0;
             z-index: -2;
+            pointer-events: none; /* Prevent Vanta from blocking clicks */
         }
 
         #bg-overlay {
@@ -325,14 +331,14 @@
             transform: scale(1.05);
         }
 
-        /* --- CARDS --- */
+        /* --- CARDS & GLASS EFFECTS --- */
         .folder-view { display: none; }
         .folder-view.active-folder { display: block; }
 
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            gap: 25px;
             list-style: none;
             padding: 0;
         }
@@ -341,37 +347,58 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            text-decoration: none;
+            /* Changed to pointer so it looks clickable */
+            cursor: pointer; 
             padding: 25px;
             min-height: 120px;
-            background: var(--glass-bg); 
-            backdrop-filter: blur(25px); 
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border);
-            border-radius: 18px;
+            
+            /* IMPROVED GLASS EFFECT */
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-left: 4px solid #007BFF;
+            
+            border-radius: 20px;
             color: var(--text-main);
             text-align: left;
-            border-left: 4px solid #007BFF;
-            box-shadow: var(--card-shadow);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            
             position: relative;
             overflow: hidden;
             animation: cardEntrance 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            transition: all 0.3s ease;
+        }
+
+        /* HOVER / GLOW EFFECT */
+        .subject-card:hover { 
+            transform: translateY(-5px); 
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+            box-shadow: 0 10px 40px rgba(0, 123, 255, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         .subject-card:active { transform: scale(0.98); }
 
         .subject-card strong {
             display: block;
-            font-size: 1.3em;
-            margin-bottom: 6px;
+            font-size: 1.4em;
+            margin-bottom: 8px;
             color: var(--text-main);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .subject-card span {
             display: block;
             color: var(--text-sec);
-            font-size: 0.85em;
-            line-height: 1.4;
+            font-size: 0.9em;
+            line-height: 1.5;
+            font-weight: 400;
+            opacity: 0.85;
         }
 
         .footer-text {
@@ -383,32 +410,39 @@
             opacity: 0.7;
         }
 
-        /* Hidden class for Search Filter */
         .hidden-card { display: none !important; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideDown { from { transform: translateY(-40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes cardEntrance { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        /* Card Colors */
+        /* Card Colors & Specific Glows */
         .card-yellow { border-left-color: #ffc107; }
+        .subject-card.card-yellow:hover { box-shadow: 0 10px 40px rgba(255, 193, 7, 0.4); }
+
         .card-green { border-left-color: #20c997; }
+        .subject-card.card-green:hover { box-shadow: 0 10px 40px rgba(32, 201, 151, 0.4); }
+
         .card-red { border-left-color: #ff4b4b; }
+        .subject-card.card-red:hover { box-shadow: 0 10px 40px rgba(255, 75, 75, 0.4); }
+
         .card-pink { border-left-color: #ff00ff; }
+        .subject-card.card-pink:hover { box-shadow: 0 10px 40px rgba(255, 0, 255, 0.4); }
+
         .card-purple { border-left-color: #bd34fe; }
+        .subject-card.card-purple:hover { box-shadow: 0 10px 40px rgba(189, 52, 254, 0.4); }
+
         .card-cyan { border-left-color: #27F2F5; }
+        .subject-card.card-cyan:hover { box-shadow: 0 10px 40px rgba(39, 242, 245, 0.4); }
 
     </style>
 </head>
-<body>
-
-    <div id="vanta-bg"></div>
+<body oncontextmenu="return false;"> <div id="vanta-bg"></div>
     <div id="bg-overlay"></div>
 
     <div class="controls-area">
         <button id="installBtn" class="control-btn" title="Install App">⬇️</button>
         <button class="control-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
-        <!-- Logout Button (Initially hidden) -->
         <button class="control-btn" onclick="logout()" id="logoutBtn" style="display: none; color: #ff6b6b; border-color: rgba(255, 107, 107, 0.3);">⏻</button>
     </div>
 
@@ -437,7 +471,6 @@
 
         <div id="dashboard-container">
             
-            <!-- SEARCH BAR -->
             <div class="search-wrapper">
                 <input type="text" id="search-input" placeholder="🔍 Search subjects..." onkeyup="filterCards()">
             </div>
@@ -449,26 +482,26 @@
 
             <div id="NIST" class="folder-view active-folder">
                 <ul class="card-grid">
-                    <li><a href="physiology.html" class="subject-card"><strong>🫀 1. Physiology</strong><span>Test your knowledge in Physiology.</span></a></li>
-                    <li><a href="micro radio.html" class="subject-card"><strong>🔬 2. Micro and Radio</strong><span>Quizzes on Microbiology and Radiology.</span></a></li>
-                    <li><a href="fmt.html" class="subject-card card-yellow"><strong>⚖️ 3. FMT</strong><span>Forensic Medicine and Toxicology.</span></a></li>
-                    <li><a href="anasthesia.html" class="subject-card card-green"><strong>💉 4. Anesthesia</strong><span>Test your Anesthesia skills.</span></a></li>
-                    <li><a href="paediatrics.html" class="subject-card card-red"><strong>👶 5. Paediatrics</strong><span>Quizzes dedicated to Paediatrics.</span></a></li>
-                    <li><a href="derma and psych.html" class="subject-card card-pink"><strong>🧠 6. Dermatology & Psych</strong><span>Advanced topics.</span></a></li>
-                    <li><a href="mock2.html" class="subject-card card-purple"><strong>📝 7. Mock 2</strong><span>12 November Mock2 q. 137.</span></a></li>
-                    <li><a href="biochem final.html" class="subject-card card-cyan"><strong>🧬 8. Biochemistry</strong><span>Path for a million possibilities.</span></a></li>
-                    <li><a href="Anatomy.html" class="subject-card card-metallic"><strong>🦴 9. Anatomy</strong><span>"Anatomy is destiny."</span></a></li>
-                    <li><a href="pathology.html" class="subject-card card-metallic"><strong>🦠 10. Pathology</strong><span>"Small cells. Big stories."</span></a></li>
+                    <li><div onclick="navigateTo('physiology.html')" class="subject-card"><strong>🫀 1. Physiology</strong><span>Test your knowledge in Physiology.</span></div></li>
+                    <li><div onclick="navigateTo('micro radio.html')" class="subject-card"><strong>🔬 2. Micro and Radio</strong><span>Quizzes on Microbiology and Radiology.</span></div></li>
+                    <li><div onclick="navigateTo('fmt.html')" class="subject-card card-yellow"><strong>⚖️ 3. FMT</strong><span>Forensic Medicine and Toxicology.</span></div></li>
+                    <li><div onclick="navigateTo('anasthesia.html')" class="subject-card card-green"><strong>💉 4. Anesthesia</strong><span>Test your Anesthesia skills.</span></div></li>
+                    <li><div onclick="navigateTo('paediatrics.html')" class="subject-card card-red"><strong>👶 5. Paediatrics</strong><span>Quizzes dedicated to Paediatrics.</span></div></li>
+                    <li><div onclick="navigateTo('derma and psych.html')" class="subject-card card-pink"><strong>🧠 6. Dermatology & Psych</strong><span>Advanced topics.</span></div></li>
+                    <li><div onclick="navigateTo('mock2.html')" class="subject-card card-purple"><strong>📝 7. Mock 2</strong><span>12 November Mock2 q. 137.</span></div></li>
+                    <li><div onclick="navigateTo('biochem final.html')" class="subject-card card-cyan"><strong>🧬 8. Biochemistry</strong><span>Path for a million possibilities.</span></div></li>
+                    <li><div onclick="navigateTo('Anatomy.html')" class="subject-card card-metallic"><strong>🦴 9. Anatomy</strong><span>"Anatomy is destiny."</span></div></li>
+                    <li><div onclick="navigateTo('pathology.html')" class="subject-card card-metallic"><strong>🦠 10. Pathology</strong><span>"Small cells. Big stories."</span></div></li>
                 </ul>
             </div>
 
             <div id="SUNRISE" class="folder-view">
                  <ul class="card-grid">
                     <li>
-                        <a href="parise.html" class="subject-card">
+                        <div onclick="navigateTo('parise.html')" class="subject-card">
                             <strong>🫀 1. Physiology</strong>
                             <span>"The physiology of today is the medicine of tomorrow."</span>
-                        </a>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -479,7 +512,6 @@
         </div>
     </div>
 
-    <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js"></script>
     
@@ -551,7 +583,8 @@
         themeBtn.innerText = savedTheme === 'light' ? '☀️' : '🌙';
         window.onload = () => initVanta(savedTheme);
         
-        // --- LOGIN SYSTEM ---
+        // --- LOGIC ---
+        
         const USER_CREDENTIALS = {
             "zaid": "Z1234", 
             "thokya": "1234",
@@ -568,101 +601,89 @@
         const headerSub = document.getElementById('header-subtitle');
 
         function updateUIForLogin(username) {
-            loginScreen.style.display = 'none';
             dashboard.style.display = 'block';
-            dashboard.style.animation = 'fadeIn 0.5s ease';
-            logoutBtn.style.display = 'flex'; // Show logout
-            
-            // Personalize Header
-            headerTitle.innerText = `Welcome, ${username.charAt(0).toUpperCase() + username.slice(1)}`;
-            headerSub.innerText = "Dashboard Access Granted";
+            loginScreen.style.display = 'none';
+            logoutBtn.style.display = 'flex';
+            headerTitle.innerText = `Welcome, ${username.toUpperCase()}`;
+            headerSub.innerText = "Access Granted";
         }
 
-        function attemptLogin() {
-            const username = usernameInput.value.trim().toLowerCase();
-            const password = passwordInput.value.trim();
+        document.getElementById("login-button").addEventListener("click", function () {
+            const user = usernameInput.value.trim();
+            const pass = passwordInput.value.trim();
 
-            if (USER_CREDENTIALS.hasOwnProperty(username) && USER_CREDENTIALS[username] === password) {
-                loginScreen.style.opacity = '0';
-                setTimeout(() => {
-                    updateUIForLogin(username);
-                }, 400);
+            if (USER_CREDENTIALS[user] && USER_CREDENTIALS[user] === pass) {
+                errorMsg.style.display = "none";
+                updateUIForLogin(user);
                 
-                errorMsg.style.display = 'none';
-                localStorage.setItem('accessGranted', 'true');
-                localStorage.setItem('currentUser', username);
+                // IMPORTANT: Set a session token
+                sessionStorage.setItem('portalToken', 'valid-user-' + user); 
             } else {
-                passwordInput.value = '';
-                errorMsg.style.display = 'block';
-                loginScreen.animate([
-                    { transform: 'translateX(0px)' }, { transform: 'translateX(10px)' }, 
-                    { transform: 'translateX(-10px)' }, { transform: 'translateX(0px)' }
-                ], { duration: 300 });
+                errorMsg.style.display = "block";
             }
-        }
-
-        function logout() {
-            localStorage.removeItem('accessGranted');
-            localStorage.removeItem('currentUser');
-            location.reload(); // Refresh to reset state
-        }
-
-        // Check if already logged in
-        if (localStorage.getItem('accessGranted') === 'true') {
-             const user = localStorage.getItem('currentUser') || 'Student';
-             updateUIForLogin(user);
-        }
-
-        document.getElementById('login-button').addEventListener('click', attemptLogin);
-        [passwordInput, usernameInput].forEach(input => {
-            input.addEventListener('keydown', (e) => { if (e.key === 'Enter') attemptLogin(); });
         });
 
-        function togglePassword() {
-            const p = document.getElementById('password-input');
-            const icon = document.querySelector('.eye-icon');
-            if (p.type === 'password') { p.type = 'text'; icon.innerText = '🔒'; icon.style.opacity = '1'; } 
-            else { p.type = 'password'; icon.innerText = '👁️'; icon.style.opacity = '0.7'; }
+        function logout() {
+            dashboard.style.display = "none";
+            loginScreen.style.display = "block";
+            logoutBtn.style.display = "none";
+            usernameInput.value = "";
+            passwordInput.value = "";
+            headerTitle.innerText = "SWT PORTAL";
+            headerSub.innerText = "created by mano";
+            
+            // Clear session
+            sessionStorage.removeItem('portalToken');
         }
 
-        // --- NEW FEATURE: SEARCH FUNCTION ---
-        function filterCards() {
-            const input = document.getElementById('search-input');
-            const filter = input.value.toUpperCase();
-            const activeFolder = document.querySelector('.folder-view.active-folder');
-            const cards = activeFolder.querySelectorAll('li');
+        function togglePassword() {
+            passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+        }
 
-            cards.forEach(li => {
-                const text = li.textContent || li.innerText;
-                if (text.toUpperCase().indexOf(filter) > -1) {
-                    li.classList.remove('hidden-card');
+        function switchFolder(folder, btn) {
+            document.querySelectorAll(".tab-btn").forEach(t => t.classList.remove("active"));
+            btn.classList.add("active");
+            document.querySelectorAll(".folder-view").forEach(f => f.classList.remove("active-folder"));
+            document.getElementById(folder).classList.add("active-folder");
+        }
+
+        function filterCards() {
+            const searchText = document.getElementById("search-input").value.toLowerCase();
+            document.querySelectorAll(".subject-card").forEach(card => {
+                const parentLi = card.parentElement;
+                if (card.innerText.toLowerCase().includes(searchText)) {
+                    card.classList.remove("hidden-card");
+                    if (parentLi.tagName === 'LI') parentLi.classList.remove("hidden-card");
                 } else {
-                    li.classList.add('hidden-card');
+                    card.classList.add("hidden-card");
+                    if (parentLi.tagName === 'LI') parentLi.classList.add("hidden-card");
                 }
             });
         }
 
-        // --- FOLDER SWITCHING ---
-        function switchFolder(folderId, btn) {
-            document.querySelectorAll('.folder-view').forEach(f => f.classList.remove('active-folder'));
-            
-            const activeFolder = document.getElementById(folderId);
-            activeFolder.classList.add('active-folder');
-            
-            // Re-trigger search filter on folder switch
-            const searchVal = document.getElementById('search-input').value;
-            if(searchVal) filterCards();
-            
-            // Reset animations
-            activeFolder.querySelectorAll('.subject-card').forEach(c => {
-                c.style.animation = 'none';
-                setTimeout(() => c.style.animation = '', 10);
-            });
-
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        // --- NEW SECURITY FUNCTION ---
+        function navigateTo(url) {
+            // Only allow navigation if logged in (Client side check)
+            if(sessionStorage.getItem('portalToken')) {
+                window.location.href = url;
+            } else {
+                alert("Please login first.");
+                logout();
+            }
         }
+        
+        // Disable Right Click context menu everywhere
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Disable keyboard shortcuts for inspect (F12, Ctrl+Shift+I, etc)
+        document.onkeydown = function(e) {
+            if(event.keyCode == 123) { return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; }
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; }
+        }
+
     </script>
 </body>
 </html>
-
