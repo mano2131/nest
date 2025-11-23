@@ -1,7 +1,7 @@
 // --- service-worker.js ---
 
 // 🔴 ACTION: INCREMENT THE VERSION NUMBER TO SIGNAL AN UPDATE
-const CACHE_NAME = 'swt-portal-v7'; 
+const CACHE_NAME = 'swt-portal-v8'; 
 
 const ASSETS_TO_CACHE = [
   './',
