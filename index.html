@@ -81,7 +81,7 @@
             top: 0;
             left: 0;
             z-index: -2;
-            pointer-events: none; /* Prevent Vanta from blocking clicks */
+            pointer-events: none;
         }
 
         #bg-overlay {
@@ -347,7 +347,6 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            /* Changed to pointer so it looks clickable */
             cursor: pointer; 
             padding: 25px;
             min-height: 120px;
@@ -437,7 +436,9 @@
 
     </style>
 </head>
-<body oncontextmenu="return false;"> <div id="vanta-bg"></div>
+<body oncontextmenu="return false;">
+
+    <div id="vanta-bg"></div>
     <div id="bg-overlay"></div>
 
     <div class="controls-area">
@@ -516,15 +517,38 @@
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js"></script>
     
     <script>
-        // --- PWA & INIT ---
+        // --- PWA INSTALLATION & CACHE UPDATER ---
         let deferredPrompt;
         const installBtn = document.getElementById('installBtn');
         const logoutBtn = document.getElementById('logoutBtn');
 
+        // NEW: Service Worker Registration with FORCE UPDATE logic
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js')
-                    .catch(err => console.log('SW Fail', err));
+                navigator.serviceWorker.register('./service-worker.js').then(registration => {
+                    
+                    // Check if there is an update
+                    registration.onupdatefound = () => {
+                        const installingWorker = registration.installing;
+                        installingWorker.onstatechange = () => {
+                            if (installingWorker.state === 'installed') {
+                                if (navigator.serviceWorker.controller) {
+                                    // New update available -> Reload page to clear old cache
+                                    console.log('New content available, reloading...');
+                                    window.location.reload(); 
+                                }
+                            }
+                        };
+                    };
+                });
+                
+                // If the controller changes (new SW took over), reload.
+                let refreshing;
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (refreshing) return;
+                    window.location.reload();
+                    refreshing = true;
+                });
             });
         }
 
@@ -615,8 +639,7 @@
             if (USER_CREDENTIALS[user] && USER_CREDENTIALS[user] === pass) {
                 errorMsg.style.display = "none";
                 updateUIForLogin(user);
-                
-                // IMPORTANT: Set a session token
+                // Set Session Token for Security
                 sessionStorage.setItem('portalToken', 'valid-user-' + user); 
             } else {
                 errorMsg.style.display = "block";
@@ -631,8 +654,7 @@
             passwordInput.value = "";
             headerTitle.innerText = "SWT PORTAL";
             headerSub.innerText = "created by mano";
-            
-            // Clear session
+            // Clear Session
             sessionStorage.removeItem('portalToken');
         }
 
@@ -661,9 +683,8 @@
             });
         }
 
-        // --- NEW SECURITY FUNCTION ---
+        // --- NAVIGATION SECURITY CHECK ---
         function navigateTo(url) {
-            // Only allow navigation if logged in (Client side check)
             if(sessionStorage.getItem('portalToken')) {
                 window.location.href = url;
             } else {
@@ -672,16 +693,17 @@
             }
         }
         
-        // Disable Right Click context menu everywhere
+        // --- ANTI-CHEAT / SECURITY LISTENERS ---
+        // Block Context Menu (Right Click)
         document.addEventListener('contextmenu', event => event.preventDefault());
 
-        // Disable keyboard shortcuts for inspect (F12, Ctrl+Shift+I, etc)
+        // Block Inspection Keyboard Shortcuts
         document.onkeydown = function(e) {
-            if(event.keyCode == 123) { return false; }
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { return false; }
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; }
-            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; }
+            if(event.keyCode == 123) { return false; } // F12
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } // Ctrl+Shift+I
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { return false; } // Ctrl+Shift+C
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; } // Ctrl+Shift+J
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } // Ctrl+U
         }
 
     </script>
