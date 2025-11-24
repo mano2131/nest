@@ -49,7 +49,7 @@
         }
 
         /* --- TRANSITIONS --- */
-        body, .header-container, .subject-card, .tab-btn, input, #login-screen, .control-btn {
+        body, .header-container, .subject-card, .tab-btn, input, #login-screen, .control-btn, #countdown-island {
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
@@ -103,6 +103,41 @@
             display: flex;
             gap: 15px;
             z-index: 100;
+            align-items: center;
+        }
+        
+        /* --- NEW: COUNTDOWN AREA (LEFT SIDE) --- */
+        .countdown-area {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+        }
+
+        #countdown-island {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            color: var(--neon-blue);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1em;
+            cursor: default;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 45px; /* Match height of control buttons */
+            box-sizing: border-box;
+        }
+
+        #countdown-island:hover {
+            box-shadow: 0 0 15px var(--neon-blue);
+            transform: scale(1.05);
+            border-color: var(--neon-blue);
         }
 
         .control-btn {
@@ -119,10 +154,55 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            /* Transition for general hover effects */
+            transition: transform 0.2s, box-shadow 0.2s; 
         }
 
         .control-btn:hover { transform: scale(1.1); box-shadow: 0 0 15px var(--neon-blue); }
         .control-btn:active { transform: scale(0.9); }
+
+        /* --- ANIMATION TOGGLE DYNAMIC ISLAND --- */
+        #animBtn {
+            overflow: hidden;
+            justify-content: flex-start; /* Keep icon left when expanding */
+            padding-left: 0;
+            /* Specialized transition for expansion */
+            transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-radius 0.4s ease;
+            position: relative;
+        }
+
+        /* The icon inside the button */
+        #animBtn .btn-icon {
+            width: 45px; /* Same as button height */
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        #animBtn.expanded {
+            width: 160px; /* Expand width */
+            border-radius: 25px;
+            background: rgba(10, 15, 30, 0.95); /* Slightly darker bg when expanded */
+            border-color: var(--neon-blue);
+        }
+
+        #animText {
+            opacity: 0;
+            white-space: nowrap;
+            font-size: 0.85em;
+            font-weight: 700;
+            margin-left: 0px;
+            color: var(--neon-blue);
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+
+        #animBtn.expanded #animText {
+            opacity: 1;
+            transition-delay: 0.1s; /* Show text after width starts expanding */
+        }
 
         #installBtn {
             display: none;
@@ -765,9 +845,22 @@
         <div id="exam-red-cross" onclick="showBackText()">❌</div>
         <div id="exam-back-text" onclick="closeExamAndReturn()">Go back to subjects</div>
     </div>
+    
+    <!-- NEW: COUNTDOWN ISLAND (Left Side) -->
+    <div class="countdown-area">
+        <div id="countdown-island">
+            <span>⏳</span>
+            <span id="days-text">-- Days</span>
+        </div>
+    </div>
 
     <div class="controls-area">
         <button id="installBtn" class="control-btn" title="Install App">⬇️</button>
+        <!-- NEW: ANIMATION TOGGLE BUTTON -->
+        <div id="animBtn" class="control-btn" onclick="toggleAnimationControl()">
+            <span class="btn-icon">🕊️</span>
+            <span id="animText">Animation ON</span>
+        </div>
         <button class="control-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
         <button class="control-btn" onclick="logout()" id="logoutBtn" style="display: none; color: #ff6b6b; border-color: rgba(255, 107, 107, 0.3);">⏻</button>
     </div>
@@ -922,8 +1015,16 @@
         // --- THEME & VANTA ---
         let vantaEffect = null;
         const themeBtn = document.getElementById('themeBtn');
+        // NEW: Animation State
+        let animationEnabled = localStorage.getItem('animation-enabled') !== 'false'; // Default to true if not set
 
         function initVanta(theme) {
+            // Only init if enabled
+            if (!animationEnabled) {
+                if(vantaEffect) vantaEffect.destroy();
+                return;
+            }
+
             if (vantaEffect) vantaEffect.destroy(); 
             const config = {
                 el: "#vanta-bg",
@@ -955,6 +1056,36 @@
             initVanta(next);
         }
 
+        // --- NEW: ANIMATION TOGGLE LOGIC ---
+        function toggleAnimationControl() {
+            const btn = document.getElementById('animBtn');
+            const txt = document.getElementById('animText');
+            
+            // Expand UI
+            btn.classList.add('expanded');
+            
+            // Toggle State
+            animationEnabled = !animationEnabled;
+            localStorage.setItem('animation-enabled', animationEnabled);
+            
+            // Apply Effect
+            if(animationEnabled) {
+                txt.innerText = "Animation ON";
+                // Get current theme to start correct vanta
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                initVanta(currentTheme);
+            } else {
+                txt.innerText = "Animation OFF";
+                if (vantaEffect) vantaEffect.destroy();
+                vantaEffect = null;
+            }
+
+            // Collapse UI after delay
+            setTimeout(() => {
+                btn.classList.remove('expanded');
+            }, 2000);
+        }
+
         const savedTheme = localStorage.getItem('site-theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         themeBtn.innerText = savedTheme === 'light' ? '☀️' : '🌙';
@@ -967,7 +1098,29 @@
             setDynamicCardColors(); // Set colors on load
             // DEFAULT VIEW: Trigger Profs Sort
             sortCards('PROFS', null); 
+            // NEW: Start Countdown
+            updateCountdown();
+            setInterval(updateCountdown, 60000); // Update every minute
         };
+        
+        // --- NEW: COUNTDOWN LOGIC ---
+        function updateCountdown() {
+            const examDate = new Date('2026-01-16T00:00:00');
+            const now = new Date();
+            const diff = examDate - now;
+            
+            // Calculate days
+            const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+            
+            const textElement = document.getElementById('days-text');
+            if (days > 0) {
+                textElement.innerText = `${days} Days`;
+            } else if (days === 0) {
+                textElement.innerText = "Today is the Day!";
+            } else {
+                textElement.innerText = "Exam Completed";
+            }
+        }
         
         // --- UTILITY MESSAGE HANDLER (Replaces alert()) ---
         function showMessage(msg, type = 'info', duration = 3000) {
@@ -1290,6 +1443,14 @@
             document.getElementById('dashboard-container').style.display = 'block';
             document.querySelector('.header-wrapper').style.display = 'block';
             document.querySelector('.controls-area').style.display = 'flex';
+            // NEW: Show Countdown again
+            document.querySelector('.countdown-area').style.display = 'flex';
+
+            // 4. BATTERY SAVER: RESUME ANIMATION (If enabled)
+            if (animationEnabled) {
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                initVanta(currentTheme);
+            }
         }
 
         // --- NEW CARD NAVIGATION LOGIC (Modified) ---
@@ -1306,12 +1467,13 @@
                 }
 
                 // --- NEW BEHAVIOR: OPEN EXAM VIEW ---
-                // Instead of console logging, we switch views
                 
                 // 1. Hide Dashboard & Header
                 document.getElementById('dashboard-container').style.display = 'none';
                 document.querySelector('.header-wrapper').style.display = 'none';
                 document.querySelector('.controls-area').style.display = 'none';
+                // NEW: Hide Countdown during exam to prevent distraction/overlap
+                document.querySelector('.countdown-area').style.display = 'none';
 
                 // 2. Show Exam Container
                 const examContainer = document.getElementById('exam-container');
@@ -1325,6 +1487,9 @@
                 const controls = document.getElementById('exam-back-controls');
                 controls.style.display = 'flex';
                 document.getElementById('exam-back-text').style.display = 'none';
+                
+                // 5. BATTERY SAVER: STOP ANIMATION
+                if (vantaEffect) vantaEffect.destroy();
 
                 console.log(`Navigating to Exam: ${url}`);
 
