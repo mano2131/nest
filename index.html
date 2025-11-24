@@ -135,7 +135,7 @@
             font-size: 0.9em;
         }
 
-        /* --- NEW: EXAM BACK BUTTON STYLES --- */
+        /* --- EXAM BACK BUTTON STYLES --- */
         #exam-back-controls {
             position: fixed;
             top: 5px;
@@ -185,7 +185,7 @@
             to { opacity: 1; transform: translateX(0); }
         }
 
-        /* --- NEW: EXAM CONTAINER (IFRAME PLACEHOLDER) --- */
+        /* --- EXAM CONTAINER (IFRAME PLACEHOLDER) --- */
         #exam-container {
             position: fixed;
             top: 0;
@@ -958,6 +958,10 @@
         const savedTheme = localStorage.getItem('site-theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         themeBtn.innerText = savedTheme === 'light' ? '☀️' : '🌙';
+        
+        // --- NEW: GLOBAL SORT STATE ---
+        let activeSortMode = 'PROFS'; // Default sort mode
+
         window.onload = () => {
             initVanta(savedTheme);
             setDynamicCardColors(); // Set colors on load
@@ -1086,8 +1090,8 @@
             document.querySelectorAll(".folder-view").forEach(f => f.classList.remove("active-folder"));
             document.getElementById(folder).classList.add("active-folder");
             
-            // Trigger sort logic for the new folder to maintain "Profs" view if active
-            sortCards('PROFS', null); 
+            // NEW: Trigger sort logic using the ACTIVE MODE (preserves A-Z if active)
+            sortCards(activeSortMode, null); 
         }
 
         function filterCards() {
@@ -1124,6 +1128,8 @@
 
         function sortCards(type, event) {
             if(event) event.stopPropagation();
+            
+            activeSortMode = type; // NEW: Update global sort mode
             
             // 1. Identify active folder
             const activeFolderDiv = document.querySelector('.folder-view.active-folder');
@@ -1313,7 +1319,7 @@
                 // Determine which folder the new card belongs to
                 const parentFolderId = targetLi.closest('.folder-view').id;
                 
-                // 1. Switch to the correct Folder
+                // 1. Switch to the correct Folder (NOW RESPECTS SORT MODE)
                 switchFolder(parentFolderId, null);
 
                 // 2. Wait for DOM update, then find card
@@ -1331,7 +1337,7 @@
                             logout();
                         }
                     }
-                }, 400); 
+                }, 300); 
             } else {
                 showMessage("No new updates found.", "info", 3000);
             }
