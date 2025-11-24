@@ -648,7 +648,7 @@
 
         /* Base hover effect for all cards, glow set inline by JS */
         .subject-card:hover { 
-            transform: translateY(-5px); 
+            /* transform: translateY(-5px); <-- Handled by JS now for consistency */
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
             /* The specific box-shadow is applied via JS for the color match */
             border-color: rgba(255, 255, 255, 0.3);
@@ -1006,13 +1006,36 @@
                 // 1. Set the left border color
                 card.style.borderLeftColor = color;
                 
-                // 2. Set the custom hover/glow effect
-                card.onmouseover = function() {
-                    this.style.boxShadow = `0 10px 40px ${color}40`; // 40 is opacity 25%
+                // Helper functions to handle the glow & elevation (Transform)
+                // This ensures consistency across mouse and touch events
+                const setReflectedState = () => {
+                    card.style.boxShadow = `0 10px 40px ${color}40`; // The Glow
+                    card.style.transform = 'translateY(-5px)';       // The Elevation
+                    card.style.transition = 'all 0.3s ease';         // Smooth transition
                 };
-                card.onmouseout = function() {
-                    this.style.boxShadow = `0 8px 32px rgba(0, 0, 0, 0.3)`;
+                
+                const setNormalState = () => {
+                    card.style.boxShadow = `0 8px 32px rgba(0, 0, 0, 0.3)`;
+                    card.style.transform = 'translateY(0)';
                 };
+
+                // 2. Mouse Events (Desktop)
+                // Replaces previous onmouseover/out for better performance and consistency
+                card.onmouseenter = setReflectedState;
+                card.onmouseleave = setNormalState;
+                
+                // 3. Touch Events (Mobile/Tablet)
+                // Triggers the exact same glow and elevation on touch
+                card.ontouchstart = function() {
+                    setReflectedState();
+                };
+                
+                card.ontouchend = function() {
+                    // Small delay so the user actually sees the glow before it vanishes
+                    setTimeout(setNormalState, 300);
+                };
+                
+                card.ontouchcancel = setNormalState;
             });
         }
         
