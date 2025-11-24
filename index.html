@@ -134,6 +134,34 @@
             font-weight: bold;
             font-size: 0.9em;
         }
+        
+        /* --- MESSAGE BOX --- */
+        .message-box {
+            position: fixed;
+            top: 130px; /* Below the main header */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 90;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 80%;
+            animation: slideIn 0.3s ease-out;
+            text-align: center;
+        }
+
+        .message-box.error { background-color: rgba(231, 76, 60, 0.9); }
+        .message-box.success { background-color: rgba(46, 204, 113, 0.9); }
+        .message-box.info { background-color: rgba(52, 152, 219, 0.9); }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
 
         /* --- HEADER --- */
         .header-wrapper {
@@ -186,6 +214,33 @@
             color: var(--text-sec);
             text-transform: uppercase;
             font-weight: 600;
+        }
+        
+        /* NEW: Glowing Welcome Message Style */
+        #glowing-welcome {
+            font-size: 1.1em;
+            font-weight: 700;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            /* Matchable color using the neon purple/pink */
+            background: linear-gradient(90deg, #ff00ff, #bd34fe, #ff00ff); 
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            /* Initial glow shadow */
+            filter: drop-shadow(0 0 10px rgba(189, 52, 254, 0.7)); 
+            animation: glowPulse 2s infinite alternate;
+        }
+
+        @keyframes glowPulse {
+            from {
+                filter: drop-shadow(0 0 5px rgba(189, 52, 254, 0.4));
+                opacity: 0.9;
+            }
+            to {
+                filter: drop-shadow(0 0 15px rgba(189, 52, 254, 1));
+                opacity: 1;
+            }
         }
 
         /* --- LOGIN SCREEN --- */
@@ -275,30 +330,177 @@
             padding: 0 20px 80px 20px;
         }
 
-        /* Search Bar */
-        .search-wrapper {
-            max-width: 500px;
+        /* --- ACTION BAR (SEARCH + SORT) --- */
+        .action-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            max-width: 500px; /* Reduced container width */
             margin: 0 auto 30px auto;
             position: relative;
+            z-index: 50;
+        }
+
+        .sort-island-container {
+            flex-shrink: 0;
+            height: 45px;
+            display: flex;
+            align-items: center;
+        }
+
+        .dynamic-island {
+            width: 45px;
+            height: 45px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            color: var(--text-main);
+            position: relative;
+        }
+
+        .dynamic-island:hover {
+            box-shadow: 0 0 15px var(--neon-blue);
+            border-color: var(--neon-blue);
+        }
+
+        .dynamic-island.expanded {
+            width: 200px;
+            border-radius: 30px;
+            background: rgba(10, 15, 30, 0.95);
+            border-color: var(--neon-blue);
+            z-index: 100;
+        }
+
+        .sort-icon {
+            font-size: 1.2em;
+            position: absolute;
+            transition: opacity 0.2s;
+        }
+
+        .dynamic-island.expanded .sort-icon {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .sort-options {
+            display: flex;
+            gap: 10px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s delay 0.1s;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dynamic-island.expanded .sort-options {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .sort-opt-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-weight: bold;
+            font-size: 0.9em;
+            padding: 8px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .sort-opt-btn:hover {
+            background: var(--neon-blue);
+            color: #fff;
+        }
+
+        /* NEW: Update Button */
+        .new-updates-btn {
+            height: 45px;
+            padding: 0 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(189, 52, 254, 0.3); /* Purple border matching Mock card */
+            border-radius: 45px;
+            color: var(--text-main);
+            font-weight: bold;
+            font-size: 0.9em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            backdrop-filter: blur(10px);
+            animation: softGlow 2s infinite ease-in-out;
+            white-space: nowrap;
+            transition: transform 0.2s;
+        }
+
+        .new-updates-btn:hover {
+            transform: scale(1.05);
+            background: rgba(189, 52, 254, 0.15);
+        }
+
+        .new-updates-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Glow animation for the button */
+        @keyframes softGlow {
+            0% { box-shadow: 0 0 5px rgba(189, 52, 254, 0.2); border-color: rgba(189, 52, 254, 0.3); }
+            50% { box-shadow: 0 0 15px rgba(189, 52, 254, 0.6); border-color: rgba(189, 52, 254, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(189, 52, 254, 0.2); border-color: rgba(189, 52, 254, 0.3); }
+        }
+
+        /* Search Bar */
+        .search-wrapper {
+            flex-grow: 1;
+            position: relative;
+            max-width: 250px; /* Limit width */
         }
 
         #search-input {
             width: 100%;
-            padding: 15px 20px;
+            padding: 12px 15px 12px 40px; /* Reduced padding */
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: 50px;
             color: var(--text-main);
-            font-size: 1em;
+            font-size: 0.9em; /* Smaller font */
             backdrop-filter: blur(10px);
             outline: none;
-            text-align: center;
+            text-align: left;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+
+        #search-input::placeholder {
+            color: rgba(255,255,255,0.5);
+            text-align: left;
         }
 
         #search-input:focus {
             border-color: var(--neon-blue);
             box-shadow: 0 0 20px rgba(0, 198, 255, 0.15);
+        }
+        
+        /* Search Icon Visual */
+        .search-icon-visual {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.6;
+            pointer-events: none;
+            font-size: 0.9em;
         }
 
         .folder-tabs {
@@ -341,6 +543,7 @@
             gap: 25px;
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         .subject-card {
@@ -358,7 +561,8 @@
             
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-top: 1px solid rgba(255, 255, 255, 0.3);
-            border-left: 4px solid #007BFF;
+            /* border-left-color is now set by JS inline style */
+            border-left-width: 4px;
             
             border-radius: 20px;
             color: var(--text-main);
@@ -371,12 +575,24 @@
             transition: all 0.3s ease;
         }
 
-        /* HOVER / GLOW EFFECT */
+        /* Base hover effect for all cards, glow set inline by JS */
         .subject-card:hover { 
             transform: translateY(-5px); 
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
-            box-shadow: 0 10px 40px rgba(0, 123, 255, 0.4);
+            /* The specific box-shadow is applied via JS for the color match */
             border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Highlighting newly added card - Applies when data-is-new="true" is present on the li */
+        li[data-is-new="true"] .subject-card {
+            animation: highlightPulse 2s infinite ease-in-out !important;
+            border-color: var(--neon-purple) !important; /* Matches the button glow */
+        }
+
+        @keyframes highlightPulse {
+            0% { box-shadow: 0 0 10px rgba(189, 52, 254, 0.3); transform: scale(1); }
+            50% { box-shadow: 0 0 30px rgba(189, 52, 254, 0.7); transform: scale(1.02); }
+            100% { box-shadow: 0 0 10px rgba(189, 52, 254, 0.3); transform: scale(1); }
         }
 
         .subject-card:active { transform: scale(0.98); }
@@ -415,24 +631,50 @@
         @keyframes slideDown { from { transform: translateY(-40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes cardEntrance { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        /* Card Colors & Specific Glows */
-        .card-yellow { border-left-color: #ffc107; }
-        .subject-card.card-yellow:hover { box-shadow: 0 10px 40px rgba(255, 193, 7, 0.4); }
+        /* --- PROFS VIEW STYLES (3 COLUMNS) --- */
+        .profs-column-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: 100%;
+            justify-content: center;
+        }
 
-        .card-green { border-left-color: #20c997; }
-        .subject-card.card-green:hover { box-shadow: 0 10px 40px rgba(32, 201, 151, 0.4); }
+        .prof-column {
+            flex: 1;
+            min-width: 280px; /* Ensures stacking on mobile */
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 15px;
+        }
 
-        .card-red { border-left-color: #ff4b4b; }
-        .subject-card.card-red:hover { box-shadow: 0 10px 40px rgba(255, 75, 75, 0.4); }
+        .prof-column h3 {
+            text-align: center;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0 0 10px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 1.1em;
+        }
 
-        .card-pink { border-left-color: #ff00ff; }
-        .subject-card.card-pink:hover { box-shadow: 0 10px 40px rgba(255, 0, 255, 0.4); }
-
-        .card-purple { border-left-color: #bd34fe; }
-        .subject-card.card-purple:hover { box-shadow: 0 10px 40px rgba(189, 52, 254, 0.4); }
-
-        .card-cyan { border-left-color: #27F2F5; }
-        .subject-card.card-cyan:hover { box-shadow: 0 10px 40px rgba(39, 242, 245, 0.4); }
+        .horizontal-line-separator {
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-purple), transparent);
+            margin: 40px auto;
+            opacity: 0.5;
+        }
+        
+        /* Ensure LIs in prof view don't have bullets if not in grid */
+        .prof-column li {
+            list-style: none;
+        }
 
     </style>
 </head>
@@ -451,8 +693,13 @@
         <div class="header-container">
             <h1 id="header-title">SWT PORTAL</h1>
             <h2 id="header-subtitle">created by mano</h2>
+            <!-- NEW: Dynamic Glowing Welcome Message - Initially hidden -->
+            <div id="glowing-welcome" style="display: none;"></div> 
         </div>
     </div>
+    
+    <!-- Custom Message Box for Feedback (replaces alert) -->
+    <div id="message-box" class="message-box" style="display: none;"></div>
 
     <div class="main-content">
         
@@ -472,8 +719,29 @@
 
         <div id="dashboard-container">
             
-            <div class="search-wrapper">
-                <input type="text" id="search-input" placeholder="🔍 Search subjects..." onkeyup="filterCards()">
+            <!-- NEW: ACTION BAR (SORT + NEW + SEARCH) -->
+            <div class="action-bar">
+                <!-- Sort Button -->
+                <div class="sort-island-container">
+                    <div id="dynamic-sort" class="dynamic-island" onclick="toggleDynamicIsland()">
+                        <span class="sort-icon">⇅</span>
+                        <div class="sort-options">
+                            <button class="sort-opt-btn" onclick="sortCards('AZ', event)">A-Z</button>
+                            <button class="sort-opt-btn" onclick="sortCards('PROFS', event)">Profs</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEW UPDATE BUTTON -->
+                <button class="new-updates-btn" onclick="scrollToNew()" title="See what's new">
+                    ✨ New
+                </button>
+                
+                <!-- Search Bar -->
+                <div class="search-wrapper">
+                    <span class="search-icon-visual">🔍</span>
+                    <input type="text" id="search-input" placeholder="Search..." onkeyup="filterCards()">
+                </div>
             </div>
             
             <div class="folder-tabs">
@@ -482,24 +750,26 @@
             </div>
 
             <div id="NIST" class="folder-view active-folder">
-                <ul class="card-grid">
-                    <li><div onclick="navigateTo('physiology.html')" class="subject-card"><strong>🫀 1. Physiology</strong><span>Test your knowledge in Physiology.</span></div></li>
-                    <li><div onclick="navigateTo('micro radio.html')" class="subject-card"><strong>🔬 2. Micro and Radio</strong><span>Quizzes on Microbiology and Radiology.</span></div></li>
-                    <li><div onclick="navigateTo('fmt.html')" class="subject-card card-yellow"><strong>⚖️ 3. FMT</strong><span>Forensic Medicine and Toxicology.</span></div></li>
-                    <li><div onclick="navigateTo('anasthesia.html')" class="subject-card card-green"><strong>💉 4. Anesthesia</strong><span>Test your Anesthesia skills.</span></div></li>
-                    <li><div onclick="navigateTo('paediatrics.html')" class="subject-card card-red"><strong>👶 5. Paediatrics</strong><span>Quizzes dedicated to Paediatrics.</span></div></li>
-                    <li><div onclick="navigateTo('derma and psych.html')" class="subject-card card-pink"><strong>🧠 6. Dermatology & Psych</strong><span>Advanced topics.</span></div></li>
-                    <li><div onclick="navigateTo('mock2.html')" class="subject-card card-purple"><strong>📝 7. Mock 2</strong><span>12 November Mock2 q. 137.</span></div></li>
-                    <li><div onclick="navigateTo('biochem final.html')" class="subject-card card-cyan"><strong>🧬 8. Biochemistry</strong><span>Path for a million possibilities.</span></div></li>
-                    <li><div onclick="navigateTo('Anatomy.html')" class="subject-card card-metallic"><strong>🦴 9. Anatomy</strong><span>"Anatomy is destiny."</span></div></li>
-                    <li><div onclick="navigateTo('pathology.html')" class="subject-card card-metallic"><strong>🦠 10. Pathology</strong><span>"Small cells. Big stories."</span></div></li>
+                <ul class="card-grid" id="nist-grid">
+                    <!-- Color classes removed, style set dynamically by JS -->
+                    <li data-name="physiology" data-cat="Preclinical"><div onclick="navigateAndMarkViewed(this, 'physiology.html')" class="subject-card"><strong>🫀 1. Physiology</strong><span>Test your knowledge in Physiology.</span></div></li>
+                    <li data-name="micro radio" data-cat="Preclinical"><div onclick="navigateAndMarkViewed(this, 'micro radio.html')" class="subject-card"><strong>🔬 2. Micro and Radio</strong><span>Quizzes on Microbiology and Radiology.</span></div></li>
+                    <li data-name="fmt" data-cat="Clinical"><div onclick="navigateAndMarkViewed(this, 'fmt.html')" class="subject-card"><strong>⚖️ 3. FMT</strong><span>Forensic Medicine and Toxicology.</span></div></li>
+                    <li data-name="anasthesia" data-cat="Small"><div onclick="navigateAndMarkViewed(this, 'anasthesia.html')" class="subject-card"><strong>💉 4. Anesthesia</strong><span>Test your Anesthesia skills.</span></div></li>
+                    <li data-name="paediatrics" data-cat="Clinical"><div onclick="navigateAndMarkViewed(this, 'paediatrics.html')" class="subject-card"><strong>👶 5. Paediatrics</strong><span>Quizzes dedicated to Paediatrics.</span></div></li>
+                    <li data-name="derma and psych" data-cat="Small"><div onclick="navigateAndMarkViewed(this, 'derma and psych.html')" class="subject-card"><strong>🧠 6. Dermatology & Psych</strong><span>Advanced topics.</span></div></li>
+                    <!-- Mock 2 card still has data-is-new="true" on the LI -->
+                    <li data-name="mock 2" data-cat="Mock" data-is-new="true"><div onclick="navigateAndMarkViewed(this, 'mock2.html')" class="subject-card"><strong>📝 7. Mock 2</strong><span>12 November Mock2 q. 137.</span></div></li>
+                    <li data-name="biochem" data-cat="Preclinical"><div onclick="navigateAndMarkViewed(this, 'biochem final.html')" class="subject-card"><strong>🧬 8. Biochemistry</strong><span>Path for a million possibilities.</span></div></li>
+                    <li data-name="anatomy" data-cat="Preclinical"><div onclick="navigateAndMarkViewed(this, 'Anatomy.html')" class="subject-card"><strong>🦴 9. Anatomy</strong><span>"Anatomy is destiny."</span></div></li>
+                    <li data-name="pathology" data-cat="Preclinical"><div onclick="navigateAndMarkViewed(this, 'pathology.html')" class="subject-card"><strong>🦠 10. Pathology</strong><span>"Small cells. Big stories."</span></div></li>
                 </ul>
             </div>
 
             <div id="SUNRISE" class="folder-view">
-                 <ul class="card-grid">
-                    <li>
-                        <div onclick="navigateTo('parise.html')" class="subject-card">
+                 <ul class="card-grid" id="sunrise-grid">
+                    <li data-cat="Preclinical">
+                        <div onclick="navigateAndMarkViewed(this, 'parise.html')" class="subject-card">
                             <strong>🫀 1. Physiology</strong>
                             <span>"The physiology of today is the medicine of tomorrow."</span>
                         </div>
@@ -522,27 +792,29 @@
         const installBtn = document.getElementById('installBtn');
         const logoutBtn = document.getElementById('logoutBtn');
 
-        // NEW: Service Worker Registration with FORCE UPDATE logic
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
+                // Check if the protocol is supported (http or https)
+                // This prevents errors in preview environments or when opening file:// or blob: URLs
+                if (!['http:', 'https:'].includes(window.location.protocol)) {
+                   console.warn('Service Workers are not supported in this protocol (' + window.location.protocol + '). Skipping registration.');
+                   return;
+                }
+
                 navigator.serviceWorker.register('./service-worker.js').then(registration => {
-                    
-                    // Check if there is an update
                     registration.onupdatefound = () => {
                         const installingWorker = registration.installing;
                         installingWorker.onstatechange = () => {
-                            if (installingWorker.state === 'installed') {
-                                if (navigator.serviceWorker.controller) {
-                                    // New update available -> Reload page to clear old cache
-                                    console.log('New content available, reloading...');
-                                    window.location.reload(); 
-                                }
+                            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                window.location.reload(); 
                             }
                         };
                     };
+                }).catch(err => {
+                    // Suppress errors during preview if service worker file is missing or blocked
+                    console.log('Service Worker registration failed (likely due to preview environment): ', err);
                 });
                 
-                // If the controller changes (new SW took over), reload.
                 let refreshing;
                 navigator.serviceWorker.addEventListener('controllerchange', () => {
                     if (refreshing) return;
@@ -561,9 +833,7 @@
         installBtn.addEventListener('click', () => {
             installBtn.style.display = 'none';
             deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((res) => {
-                deferredPrompt = null;
-            });
+            deferredPrompt.userChoice.then((res) => { deferredPrompt = null; });
         });
 
         // --- THEME & VANTA ---
@@ -605,16 +875,61 @@
         const savedTheme = localStorage.getItem('site-theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         themeBtn.innerText = savedTheme === 'light' ? '☀️' : '🌙';
-        window.onload = () => initVanta(savedTheme);
-        
-        // --- LOGIC ---
-        
-        const USER_CREDENTIALS = {
-            "zaid": "Z1234", 
-            "thokya": "1234",
-            "mn": "21",
-            "vana": "1234",
+        window.onload = () => {
+            initVanta(savedTheme);
+            setDynamicCardColors(); // Set colors on load
+            // DEFAULT VIEW: Trigger Profs Sort
+            sortCards('PROFS', null); 
         };
+        
+        // --- UTILITY MESSAGE HANDLER (Replaces alert()) ---
+        function showMessage(msg, type = 'info', duration = 3000) {
+            const box = document.getElementById('message-box');
+            box.innerText = msg;
+            box.className = `message-box ${type}`;
+            box.style.display = 'block';
+
+            if (duration > 0) {
+                setTimeout(() => {
+                    box.style.display = 'none';
+                }, duration);
+            }
+        }
+
+        // --- LOGIC ---
+
+        const NEON_COLORS = [
+            '#00c6ff', // Neon Blue
+            '#bd34fe', // Neon Purple
+            '#ff4b4b', // Neon Red
+            '#ffc107', // Neon Yellow
+            '#20c997', // Neon Green
+            '#ff00ff', // Neon Pink
+            '#27F2F5', // Cyan
+            '#ffa500', // Orange
+            '#7fff00', // Chartreuse
+            '#f0e68c'  // Khaki/Pale Yellow
+        ];
+
+        function setDynamicCardColors() {
+            const cards = document.querySelectorAll('.subject-card');
+            cards.forEach((card, index) => {
+                const color = NEON_COLORS[index % NEON_COLORS.length];
+                
+                // 1. Set the left border color
+                card.style.borderLeftColor = color;
+                
+                // 2. Set the custom hover/glow effect
+                card.onmouseover = function() {
+                    this.style.boxShadow = `0 10px 40px ${color}40`; // 40 is opacity 25%
+                };
+                card.onmouseout = function() {
+                    this.style.boxShadow = `0 8px 32px rgba(0, 0, 0, 0.3)`;
+                };
+            });
+        }
+        
+        const USER_CREDENTIALS = { "zaid": "Z1234", "thokya": "1234", "mn": "21", "vana": "1234" };
 
         const loginScreen = document.getElementById('login-screen');
         const dashboard = document.getElementById('dashboard-container');
@@ -623,26 +938,34 @@
         const errorMsg = document.getElementById('error-message');
         const headerTitle = document.getElementById('header-title');
         const headerSub = document.getElementById('header-subtitle');
+        // Get the new glowing welcome element
+        const glowingWelcome = document.getElementById('glowing-welcome'); 
 
         function updateUIForLogin(username) {
             dashboard.style.display = 'block';
             loginScreen.style.display = 'none';
             logoutBtn.style.display = 'flex';
-            headerTitle.innerText = `Welcome, ${username.toUpperCase()}`;
-            headerSub.innerText = "Access Granted";
+            
+            // NEW: Keep original titles and add glowing welcome message
+            // headerTitle.innerText = `SWT PORTAL`; (Kept constant)
+            // headerSub.innerText = "created by mano"; (Kept constant)
+            glowingWelcome.innerText = `WELCOME, ${username.toUpperCase()}`;
+            glowingWelcome.style.display = 'block';
+
+            // Ensure sorting is applied after display block
+            setTimeout(() => sortCards('PROFS', null), 100);
         }
 
         document.getElementById("login-button").addEventListener("click", function () {
             const user = usernameInput.value.trim();
             const pass = passwordInput.value.trim();
-
             if (USER_CREDENTIALS[user] && USER_CREDENTIALS[user] === pass) {
                 errorMsg.style.display = "none";
                 updateUIForLogin(user);
-                // Set Session Token for Security
                 sessionStorage.setItem('portalToken', 'valid-user-' + user); 
             } else {
                 errorMsg.style.display = "block";
+                showMessage("Access Denied. Check your credentials.", "error", 4000);
             }
         });
 
@@ -652,10 +975,16 @@
             logoutBtn.style.display = "none";
             usernameInput.value = "";
             passwordInput.value = "";
+            
+            // HIDE the glowing welcome message
+            glowingWelcome.style.display = 'none';
+            
+            // Reset main titles (optional, as they are now static, but good practice)
             headerTitle.innerText = "SWT PORTAL";
             headerSub.innerText = "created by mano";
-            // Clear Session
+
             sessionStorage.removeItem('portalToken');
+            showMessage("Logged out successfully.", "info", 3000);
         }
 
         function togglePassword() {
@@ -664,46 +993,244 @@
 
         function switchFolder(folder, btn) {
             document.querySelectorAll(".tab-btn").forEach(t => t.classList.remove("active"));
-            btn.classList.add("active");
+            if (btn) btn.classList.add("active");
+            else {
+                // Find button for folder
+                const targetBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.innerText === folder);
+                if(targetBtn) targetBtn.classList.add('active');
+            }
+            
             document.querySelectorAll(".folder-view").forEach(f => f.classList.remove("active-folder"));
             document.getElementById(folder).classList.add("active-folder");
+            
+            // Trigger sort logic for the new folder to maintain "Profs" view if active
+            sortCards('PROFS', null); 
         }
 
         function filterCards() {
             const searchText = document.getElementById("search-input").value.toLowerCase();
             document.querySelectorAll(".subject-card").forEach(card => {
-                const parentLi = card.parentElement;
+                const parentLi = card.closest('li');
                 if (card.innerText.toLowerCase().includes(searchText)) {
                     card.classList.remove("hidden-card");
-                    if (parentLi.tagName === 'LI') parentLi.classList.remove("hidden-card");
+                    if (parentLi) parentLi.style.display = '';
                 } else {
                     card.classList.add("hidden-card");
-                    if (parentLi.tagName === 'LI') parentLi.classList.add("hidden-card");
+                    if (parentLi) parentLi.style.display = 'none';
                 }
             });
         }
 
-        // --- NAVIGATION SECURITY CHECK ---
-        function navigateTo(url) {
+        // --- SORTING LOGIC ---
+        
+        let cachedLists = {
+            'nist-grid': [],
+            'sunrise-grid': []
+        };
+        
+        function cacheList(gridId) {
+            if (cachedLists[gridId].length === 0) {
+                const listItems = document.querySelectorAll(`#${gridId} > li`);
+                listItems.forEach(li => cachedLists[gridId].push(li));
+            }
+        }
+
+        function toggleDynamicIsland() {
+            document.getElementById('dynamic-sort').classList.toggle('expanded');
+        }
+
+        function sortCards(type, event) {
+            if(event) event.stopPropagation();
+            
+            // 1. Identify active folder
+            const activeFolderDiv = document.querySelector('.folder-view.active-folder');
+            if(!activeFolderDiv) return;
+            const gridUl = activeFolderDiv.querySelector('ul'); // Get the UL inside
+            if(!gridUl) return; 
+            const gridId = gridUl.id;
+
+            // 2. Cache if needed
+            cacheList(gridId);
+            
+            // 3. Clear current view
+            gridUl.innerHTML = '';
+            
+            // 4. Logic
+            if (type === 'AZ') {
+                gridUl.className = 'card-grid'; // Reset class
+                gridUl.style.display = 'grid'; // Restore grid display
+
+                let sortedList = [...cachedLists[gridId]].sort((a, b) => {
+                    const textA = a.innerText.toLowerCase();
+                    const textB = b.innerText.toLowerCase();
+                    return textA.localeCompare(textB);
+                });
+                
+                sortedList.forEach(li => {
+                    li.style.display = ''; 
+                    gridUl.appendChild(li);
+                });
+            
+            } else if (type === 'PROFS') {
+                gridUl.className = 'card-grid profs-container';
+                gridUl.style.display = 'block';
+
+                const preclinical = [];
+                const clinical = [];
+                const small = [];
+                const mocks = [];
+
+                cachedLists[gridId].forEach(li => {
+                    li.style.display = ''; 
+                    const text = li.innerText.toLowerCase();
+                    const cat = li.getAttribute('data-cat') || "";
+                    
+                    if (text.includes("mock")) {
+                        mocks.push(li);
+                    } else if (cat === "Preclinical") {
+                        preclinical.push(li);
+                    } else if (cat === "Clinical") {
+                        clinical.push(li);
+                    } else if (cat === "Small") {
+                        small.push(li);
+                    } else {
+                        // Fallback logic
+                        if (text.includes("anatomy") || text.includes("physio") || text.includes("biochem") || text.includes("micro") || text.includes("patho") || text.includes("pharm")) {
+                            preclinical.push(li);
+                        } else if (text.includes("ent") || text.includes("opthal") || text.includes("paed") || text.includes("fmt") || text.includes("med") || text.includes("surg") || text.includes("obs") || text.includes("psm")) {
+                            clinical.push(li);
+                        } else {
+                            small.push(li);
+                        }
+                    }
+                });
+
+                // Create 3 Column Layout Container
+                const columnsWrapper = document.createElement('div');
+                columnsWrapper.className = 'profs-column-container';
+
+                // Helper to build column
+                function buildColumn(title, items) {
+                    const col = document.createElement('div');
+                    col.className = 'prof-column';
+                    const h3 = document.createElement('h3');
+                    h3.innerText = title;
+                    col.appendChild(h3);
+                    if (items.length > 0) {
+                        items.forEach(item => col.appendChild(item));
+                    } else {
+                        const empty = document.createElement('span');
+                        empty.innerText = "No subjects";
+                        empty.style.color = "rgba(255,255,255,0.3)";
+                        empty.style.textAlign = "center";
+                        col.appendChild(empty);
+                    }
+                    return col;
+                }
+
+                columnsWrapper.appendChild(buildColumn('Preclinical', preclinical));
+                columnsWrapper.appendChild(buildColumn('Clinical', clinical));
+                columnsWrapper.appendChild(buildColumn('Small', small));
+                
+                gridUl.appendChild(columnsWrapper);
+
+                // Add Separator and Mocks
+                if(mocks.length > 0) {
+                    const hr = document.createElement('div');
+                    hr.className = 'horizontal-line-separator';
+                    gridUl.appendChild(hr);
+                    
+                    const mockContainer = document.createElement('div');
+                    mockContainer.style.display = 'flex';
+                    mockContainer.style.justifyContent = 'center';
+                    mockContainer.style.flexWrap = 'wrap';
+                    mockContainer.style.gap = '20px';
+                    mockContainer.style.width = '100%';
+                    
+                    mocks.forEach(li => mockContainer.appendChild(li));
+                    gridUl.appendChild(mockContainer);
+                }
+            }
+            
+            const island = document.getElementById('dynamic-sort');
+            if(island) setTimeout(() => island.classList.remove('expanded'), 300);
+        }
+
+        // --- NEW CARD NAVIGATION AND GLOW LOGIC ---
+        
+        // This function handles the click on a SUBJECT CARD. 
+        function navigateAndMarkViewed(clickedDiv, url) {
             if(sessionStorage.getItem('portalToken')) {
-                window.location.href = url;
+                
+                // Find the parent <li> element
+                const cardLi = clickedDiv.closest('li');
+
+                // If the card is marked as new, remove the glow attribute
+                if (cardLi && cardLi.hasAttribute('data-is-new')) {
+                    cardLi.removeAttribute('data-is-new');
+                }
+                
+                // NOTE: The successful navigation message has been intentionally removed 
+                // to meet user requirements. Only errors are shown.
+                const cardTitle = clickedDiv.querySelector('strong')?.innerText || 'Unknown Module';
+                console.log(`Simulated navigation to: ${cardTitle} (${url})`);
+
+                
             } else {
-                alert("Please login first.");
+                showMessage("Please log in first.", "error", 4000);
                 logout();
             }
         }
-        
-        // --- ANTI-CHEAT / SECURITY LISTENERS ---
-        // Block Context Menu (Right Click)
-        document.addEventListener('contextmenu', event => event.preventDefault());
 
-        // Block Inspection Keyboard Shortcuts
+        // This function handles the click on the "✨ New" BUTTON.
+        function scrollToNew() {
+            const targetLi = document.querySelector('li[data-is-new="true"]');
+
+            if (targetLi) {
+                // Determine which folder the new card belongs to
+                const parentFolderId = targetLi.closest('.folder-view').id;
+                
+                // 1. Switch to the correct Folder
+                switchFolder(parentFolderId, null);
+
+                // 2. Wait for DOM update, then find card
+                setTimeout(() => {
+                    const target = document.querySelector('li[data-is-new="true"]');
+                    if (target) {
+                        // Scroll to the card
+                        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        
+                        if(sessionStorage.getItem('portalToken')) {
+                            // If logged in, do nothing (no message shown)
+                            
+                        } else {
+                            showMessage("Please log in first.", "error", 4000);
+                            logout();
+                        }
+                    }
+                }, 400); 
+            } else {
+                showMessage("No new updates found.", "info", 3000);
+            }
+        }
+        
+        // --- INITIAL AUTH CHECK ---
+        const portalToken = sessionStorage.getItem('portalToken');
+        if (portalToken && portalToken.startsWith('valid-user-')) {
+            const username = portalToken.split('-')[2];
+            updateUIForLogin(username);
+        } else if (portalToken) {
+            // Invalid token found, log out
+             logout();
+        }
+
+        document.addEventListener('contextmenu', event => event.preventDefault());
         document.onkeydown = function(e) {
-            if(event.keyCode == 123) { return false; } // F12
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } // Ctrl+Shift+I
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { return false; } // Ctrl+Shift+C
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; } // Ctrl+Shift+J
-            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } // Ctrl+U
+            if(event.keyCode == 123) { return false; } 
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } 
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { return false; } 
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; } 
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } 
         }
 
     </script>
