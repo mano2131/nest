@@ -1,71 +1,81 @@
 // --- service-worker.js ---
 
 // 🔴 ACTION: INCREMENT THE VERSION NUMBER TO SIGNAL AN UPDATE
-const CACHE_NAME = 'swt-portal-v18'; 
+const CACHE_NAME = 'swt-portal-v19'; // Keep this at v18 for now, but increment next time!
 
 const ASSETS_TO_CACHE = [
-  './',
-  './index.html',// <--- This file will be re-downloaded!
-  './manifest.json',
-  // Your existing files, including the one you changed:
-  './physiology.html',// <--- This file will be re-downloaded!
-  './micro radio.html',// <--- This file will be re-downloaded!
-  './fmt.html',// <--- This file will be re-downloaded!
-  './anasthesia.html', // <--- This file will be re-downloaded!
-  './paediatrics.html',// <--- This file will be re-downloaded!
-  './derma and psych.html',// <--- This file will be re-downloaded!
-  './mock2.html',// <--- This file will be re-downloaded!
-  './biochem final.html',// <--- This file will be re-downloaded!
-  './Anatomy.html',// <--- This file will be re-downloaded!
-  './pathology.html',// <--- This file will be re-downloaded!
-  './parise.html',// <--- This file will be re-downloaded!
+  './',
+  './index.html',
+  './manifest.json',
+  // Your existing files:
+  './physiology.html',
+  './micro radio.html',
+  './fmt.html',
+  './anasthesia.html',
+  './paediatrics.html',
+  './derma and psych.html',
+  './mock2.html',
+  './biochem final.html',
+  './Anatomy.html',
+  './pathology.html',
+  './parise.html',
 ];
 
 // 1. INSTALL: Cache resources
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('Opened cache');
-      // The browser will fetch the new versions of all these files.
-      return cache.addAll(ASSETS_TO_CACHE); 
-    })
-  );
-  self.skipWaiting(); 
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('✅ Service Worker: Install - Opened cache and adding assets.');
+      // The browser will fetch the new versions of all these files.
+      return cache.addAll(ASSETS_TO_CACHE); 
+    })
+  );
+  self.skipWaiting(); // Forces the waiting service worker to become the active service worker
 });
 
-// 2. ACTIVATE: Delete old caches
+// 2. ACTIVATE: Delete old caches and claim clients
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) {
-            console.log('Deleting old cache:', cache);
-            return caches.delete(cache);
-          }
-        })
-      );
-    })
-  );
-  return self.clients.claim(); 
+  console.log('🚀 Service Worker: Activate - Deleting old caches.');
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cache) => {
+          if (cache !== CACHE_NAME) {
+            console.log('🗑️ Deleting old cache:', cache);
+            return caches.delete(cache);
+          }
+        })
+      );
+    }).then(() => {
+      // Take control of all clients (pages) under the scope immediately
+      return self.clients.claim(); 
+    })
+  );
 });
 
 // 3. FETCH: Network First, then Cache
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          return response;
-        }
-        const responseToCache = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
-        return response;
-      })
-      .catch(() => {
-        return caches.match(event.request);
-      })
-  );
+  event.respondWith(
+    // Try to get the latest from the network
+    fetch(event.request)
+      .then((response) => {
+        // Check if we received a valid response
+        if (!response || response.status !== 200 || response.type !== 'basic') {
+          return response; // Return the non-200 response or non-basic response
+        }
+        
+        // IMPORTANT: Clone the response to put in the cache
+        const responseToCache = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          // Update the cache with the fresh network response
+          cache.put(event.request, responseToCache);
+        });
+        return response; // Return the original response to the page
+      })
+      .catch(() => {
+        // Network failed, serve the asset from the cache
+        console.log('⚠️ Network fetch failed, serving from cache:', event.request.url);
+        return caches.match(event.request);
+      })
+  );
 });
