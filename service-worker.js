@@ -1,24 +1,24 @@
 // --- service-worker.js ---
 
 // 🔴 ACTION: INCREMENT THE VERSION NUMBER TO SIGNAL AN UPDATE
-const CACHE_NAME = 'swt-portal-v17'; 
+const CACHE_NAME = 'swt-portal-v18'; 
 
 const ASSETS_TO_CACHE = [
   './',
   './index.html',// <--- This file will be re-downloaded!
   './manifest.json',
   // Your existing files, including the one you changed:
-  './physiology.html',
-  './micro radio.html',
-  './fmt.html',
-  './anasthesia.html', 
-  './paediatrics.html',
-  './derma and psych.html',
-  './mock2.html',
-  './biochem final.html',
-  './Anatomy.html',
-  './pathology.html',
-  './parise.html',
+  './physiology.html',// <--- This file will be re-downloaded!
+  './micro radio.html',// <--- This file will be re-downloaded!
+  './fmt.html',// <--- This file will be re-downloaded!
+  './anasthesia.html', // <--- This file will be re-downloaded!
+  './paediatrics.html',// <--- This file will be re-downloaded!
+  './derma and psych.html',// <--- This file will be re-downloaded!
+  './mock2.html',// <--- This file will be re-downloaded!
+  './biochem final.html',// <--- This file will be re-downloaded!
+  './Anatomy.html',// <--- This file will be re-downloaded!
+  './pathology.html',// <--- This file will be re-downloaded!
+  './parise.html',// <--- This file will be re-downloaded!
 ];
 
 // 1. INSTALL: Cache resources
