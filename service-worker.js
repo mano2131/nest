@@ -1,17 +1,17 @@
 // --- service-worker.js ---
 
 // 🔴 ACTION: INCREMENT THE VERSION NUMBER TO SIGNAL AN UPDATE
-const CACHE_NAME = 'swt-portal-v16'; 
+const CACHE_NAME = 'swt-portal-v17'; 
 
 const ASSETS_TO_CACHE = [
   './',
-  './index.html',
+  './index.html',// <--- This file will be re-downloaded!
   './manifest.json',
   // Your existing files, including the one you changed:
   './physiology.html',
   './micro radio.html',
   './fmt.html',
-  './anasthesia.html', // <--- This file will be re-downloaded!
+  './anasthesia.html', 
   './paediatrics.html',
   './derma and psych.html',
   './mock2.html',
