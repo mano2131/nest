@@ -9,8 +9,7 @@
     <meta name="apple-mobile-web-app-title" content="SWT Portal">
     <meta name="description" content="NIST & SUNRISE Student Portal">
 
-    <link rel="manifest" href="manifest.json">
-    
+    <!-- Icon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💠</text></svg>">
 
     <title>NIST & SUNRISE - Portal</title>
@@ -322,7 +321,11 @@
         }
 
         /* --- DASHBOARD --- */
-        #dashboard-container { display: none; }
+        #dashboard-container { 
+            display: none; 
+            /* Added smooth fade in for dashboard */
+            animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
         
         .main-content {
             max-width: 1100px;
@@ -439,9 +442,18 @@
             align-items: center;
             gap: 5px;
             backdrop-filter: blur(10px);
-            animation: softGlow 2s infinite ease-in-out;
+            
+            /* Enhanced animations */
+            animation: buttonEntrance 1s ease-out forwards, softGlow 2s infinite ease-in-out;
+            opacity: 0; /* Start hidden for entrance animation */
+            
             white-space: nowrap;
-            transition: transform 0.2s;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        @keyframes buttonEntrance {
+            0% { opacity: 0; transform: translateY(-20px) scale(0.8); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .new-updates-btn:hover {
@@ -675,6 +687,60 @@
         .prof-column li {
             list-style: none;
         }
+        
+        /* --- VIEWER OVERLAY (NEW) --- */
+        #viewer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color); /* Match theme */
+            z-index: 2000; /* High z-index to sit on top */
+            display: flex;
+            flex-direction: column;
+            transform: translateY(100%); /* Start off-screen */
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        #viewer-overlay.active {
+            transform: translateY(0);
+        }
+
+        #content-frame {
+            flex-grow: 1;
+            border: none;
+            width: 100%;
+            height: 100%;
+            background: white; /* Default white background for iframes */
+        }
+
+        #close-viewer-btn {
+            position: absolute;
+            bottom: 30px; /* Floating at bottom for easy thumb access */
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 75, 75, 0.9); /* Reddish */
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1em;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            z-index: 2001;
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        #close-viewer-btn:hover {
+            transform: translateX(-50%) scale(1.05);
+            background: #ff3333;
+        }
 
     </style>
 </head>
@@ -782,7 +848,16 @@
             </p>
         </div>
     </div>
+    
+    <!-- IN-APP VIEWER OVERLAY -->
+    <div id="viewer-overlay">
+        <iframe id="content-frame" src=""></iframe>
+        <button id="close-viewer-btn" onclick="closeViewer()">
+            ✕ Close Viewer
+        </button>
+    </div>
 
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js"></script>
     
@@ -1156,6 +1231,30 @@
             if(island) setTimeout(() => island.classList.remove('expanded'), 300);
         }
 
+        // --- VIEWER LOGIC (NEW) ---
+        
+        function openViewer(url) {
+            const overlay = document.getElementById('viewer-overlay');
+            const iframe = document.getElementById('content-frame');
+            
+            // Set source and show overlay
+            iframe.src = url;
+            overlay.classList.add('active');
+        }
+
+        function closeViewer() {
+            const overlay = document.getElementById('viewer-overlay');
+            const iframe = document.getElementById('content-frame');
+            
+            // Hide overlay first
+            overlay.classList.remove('active');
+            
+            // Wait for transition to finish before clearing src (prevents flash of white)
+            setTimeout(() => {
+                iframe.src = ''; 
+            }, 400); 
+        }
+
         // --- NEW CARD NAVIGATION AND GLOW LOGIC ---
         
         // This function handles the click on a SUBJECT CARD. 
@@ -1170,11 +1269,11 @@
                     cardLi.removeAttribute('data-is-new');
                 }
                 
-                // NOTE: The successful navigation message has been intentionally removed 
-                // to meet user requirements. Only errors are shown.
                 const cardTitle = clickedDiv.querySelector('strong')?.innerText || 'Unknown Module';
-                console.log(`Simulated navigation to: ${cardTitle} (${url})`);
+                console.log(`Opening Viewer for: ${cardTitle} (${url})`);
 
+                // OPEN THE IN-APP VIEWER INSTEAD OF NAVIGATING AWAY
+                openViewer(url);
                 
             } else {
                 showMessage("Please log in first.", "error", 4000);
@@ -1184,31 +1283,38 @@
 
         // This function handles the click on the "✨ New" BUTTON.
         function scrollToNew() {
+            // 1. Search for the marked element in the entire DOM
             const targetLi = document.querySelector('li[data-is-new="true"]');
 
             if (targetLi) {
-                // Determine which folder the new card belongs to
-                const parentFolderId = targetLi.closest('.folder-view').id;
+                const parentFolder = targetLi.closest('.folder-view');
+                const isFolderActive = parentFolder.classList.contains('active-folder');
                 
-                // 1. Switch to the correct Folder
-                switchFolder(parentFolderId, null);
+                // 2. Switch folder if not active
+                if (!isFolderActive) {
+                    switchFolder(parentFolder.id, null);
+                }
 
-                // 2. Wait for DOM update, then find card
+                // 3. Scroll logic
+                // We use a timeout to allow the folder switch (display:block) and potential re-sorting to complete
                 setTimeout(() => {
+                    // Re-query in case DOM nodes were moved by sortCards
                     const target = document.querySelector('li[data-is-new="true"]');
                     if (target) {
-                        // Scroll to the card
                         target.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         
-                        if(sessionStorage.getItem('portalToken')) {
-                            // If logged in, do nothing (no message shown)
-                            
-                        } else {
-                            showMessage("Please log in first.", "error", 4000);
-                            logout();
+                        // Optional: Flash effect or focus? 
+                        // The CSS animation 'highlightPulse' is already handling the visual cue.
+
+                        if (!sessionStorage.getItem('portalToken')) {
+                             // Delay error message slightly so it appears after scroll starts
+                             setTimeout(() => {
+                                showMessage("Please log in first.", "error", 4000);
+                                logout();
+                             }, 500);
                         }
                     }
-                }, 400); 
+                }, 300); // 300ms is a sweet spot for "smooth" feel without too much lag
             } else {
                 showMessage("No new updates found.", "info", 3000);
             }
@@ -1236,4 +1342,3 @@
     </script>
 </body>
 </html>
-
