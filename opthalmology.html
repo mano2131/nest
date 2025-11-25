@@ -1,7 +1,23 @@
-<html lang="en"><head>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+    // --- SECURITY CHECK ---
+    // If the token is missing, they accessed this file directly (cheating)
+    if (!sessionStorage.getItem('portalToken')) {
+        // Replace 'index.html' with the actual name of your main login page
+        window.location.href = 'index.html'; 
+    }
+
+    // Disable Right Click on Exam Page too
+    document.addEventListener('contextmenu', event => event.preventDefault());
     
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    // Disable Selection
+    document.addEventListener('selectstart', event => event.preventDefault());
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MCQ Exam</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -577,34 +593,34 @@
     
     <!-- DYNAMIC ISLAND: Left Side Center Default -->
     <div id="dynamic-island" class="vertical" style="top: 50%; left: 20px; transform: translateY(-50%);">
-        <button id="island-minimize-btn" class="island-mini-btn" aria-label="Minimize Island" title="Minimize">−</button>
+        <button id="island-minimize-btn" class="island-mini-btn" aria-label="Minimize Island" title="Minimize">&minus;</button>
         
         <div class="island-separator"></div>
         <button id="island-home-btn" class="island-btn" aria-label="Go Home">
              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
         </button>
 
         <div class="island-separator"></div>
         <button id="island-progress-btn" class="island-btn" aria-label="View Progress">
              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
         </button>
         <div class="island-separator"></div>
         <button id="island-theme-btn" class="island-btn" aria-label="Toggle Theme">
              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
             </svg>
         </button>
         <div class="island-separator"></div>
         <button id="island-settings-btn" class="island-btn" aria-label="Swipe Settings">
              <svg id="swipe-icon-smooth" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
             <svg id="swipe-icon-hard" class="hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
         </button>
     </div>
@@ -615,7 +631,7 @@
         <div id="setup-screen" class="screen active flex-col justify-center items-center p-4">
             <div id="resume-banner" class="hidden w-full max-w-5xl bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg shadow-lg mb-6" role="alert">
                 <div class="flex">
-                    <div class="py-1"><svg class="fill-current h-6 w-6 text-yellow-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-5.414V8a1 1 0 112 0v4.586a1 1 0 11-2 0zM10 6a1 1 0 100-2 1 1 0 000 2z"></path></svg></div>
+                    <div class="py-1"><svg class="fill-current h-6 w-6 text-yellow-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-5.414V8a1 1 0 112 0v4.586a1 1 0 11-2 0zM10 6a1 1 0 100-2 1 1 0 000 2z"/></svg></div>
                     <div>
                         <p class="font-bold">Saved Exam Session Found!</p>
                         <p class="text-sm">You have a saved exam in progress. What would you like to do?</p>
@@ -751,7 +767,7 @@
                         <span class="text-xs font-bold themed-text-tertiary">created by mano</span>
                         <button id="calculator-toggle-btn" class="p-2 rounded-full themed-bg-accent-hover" aria-label="Toggle Calculator">
                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 themed-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                            </svg>
                         </button>
                         <div id="timer" class="text-xl font-mono px-4 py-1 rounded themed-bg-accent themed-text-primary" aria-label="Timer"></div>
@@ -769,12 +785,12 @@
                 <footer class="p-4 themed-bg-secondary" style="box-shadow: 0 -2px 5px var(--shadow-color);">
                     <div class="flex justify-between items-center">
                         <div>
-                            <button id="mark-review-btn" class="py-2 px-4 rounded text-white bg-purple-600 hover:bg-purple-700" aria-label="Mark for Review and Next">Mark for Review &amp; Next</button>
+                            <button id="mark-review-btn" class="py-2 px-4 rounded text-white bg-purple-600 hover:bg-purple-700" aria-label="Mark for Review and Next">Mark for Review & Next</button>
                             <button id="clear-response-btn" class="py-2 px-4 rounded ml-4 themed-bg-accent themed-bg-accent-hover" aria-label="Clear Selected Response">Clear Response</button>
                         </div>
                         <div class="flex items-center space-x-4">
                             <button id="prev-btn" class="py-2 px-6 rounded disabled:opacity-50 themed-bg-accent themed-bg-accent-hover" aria-label="Previous Question">Previous</button>
-                            <button id="save-next-btn" class="py-2 px-6 rounded font-bold" style="background-color: #16a34a; color: white;" aria-label="Save Answer and Next Question">Save &amp; Next</button>
+                            <button id="save-next-btn" class="py-2 px-6 rounded font-bold" style="background-color: #16a34a; color: white;" aria-label="Save Answer and Next Question">Save & Next</button>
                         </div>
                     </div>
                 </footer>
@@ -799,19 +815,19 @@
                             <span id="not-visited-count" class="font-bold px-1.5 py-0.5 rounded-full text-[10px] themed-bg-accent themed-text-primary">0</span>
                         </div>
                          <div class="flex items-center justify-between">
-                            <div class="flex items-center"><div class="w-4 h-4 rounded bg-purple-600 mr-2 relative"><svg xmlns="http://www.w3.org/2000/svg" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-2.5 w-2.5 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"></path></svg></div> Marked for Review</div>
+                            <div class="flex items-center"><div class="w-4 h-4 rounded bg-purple-600 mr-2 relative"><svg xmlns="http://www.w3.org/2000/svg" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-2.5 w-2.5 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z" /></svg></div> Marked for Review</div>
                             <span id="marked-for-review-count" class="font-bold px-1.5 py-0.5 rounded-full text-[10px] themed-bg-accent themed-text-primary">0</span>
                         </div>
                     </div>
                 </div>
                 <button id="hide-palette-btn" class="absolute top-1/2 -left-3 z-10 p-1 rounded-full shadow-md border -translate-y-1/2" aria-label="Hide Question Palette">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
                 </button>
             </aside>
 
             <!-- Show Palette Button -->
             <button id="show-palette-btn" class="hidden absolute top-1/2 right-4 z-10 p-2 rounded-full shadow-lg border -translate-y-1/2" aria-label="Show Question Palette">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
             </button>
         </div>
 
@@ -891,7 +907,7 @@
                     </button>
                     <button id="practice-calculator-toggle-btn" class="p-2 rounded-full themed-bg-accent-hover" aria-label="Toggle Calculator">
                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 themed-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                        </svg>
                     </button>
                     <div id="practice-timer" class="text-xl font-mono px-4 py-1 rounded hidden themed-bg-accent themed-text-primary" aria-label="Practice Timer"></div>
@@ -1049,7 +1065,7 @@
         <div id="calculator-modal" class="calculator-modal absolute w-64 rounded-lg shadow-2xl z-50 hidden">
             <div id="calculator-header" class="p-2 flex justify-between items-center rounded-t-lg cursor-move themed-bg-accent">
                 <span class="font-bold themed-text-secondary">Calculator</span>
-                <button id="calculator-close-btn" class="text-xl themed-text-secondary hover:themed-text-primary" aria-label="Close Calculator">×</button>
+                <button id="calculator-close-btn" class="text-xl themed-text-secondary hover:themed-text-primary" aria-label="Close Calculator">&times;</button>
             </div>
             <div class="p-4">
                 <div id="calculator-display" class="text-right text-3xl font-mono p-2 rounded mb-4 overflow-x-auto themed-bg-tertiary" aria-label="Calculator Display">0</div>
@@ -3726,6 +3742,6 @@
         history.pushState(null, document.title, location.href);
     });
 </script>
-
-
-    </body></html>
+</body>
+</html>
+    
