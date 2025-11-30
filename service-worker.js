@@ -1,7 +1,7 @@
 // --- service-worker.js ---
 
 // 🔴 ACTION: INCREMENT THE VERSION NUMBER TO SIGNAL AN UPDATE
-const CACHE_NAME = 'swt-portal-v43'; // ⬅️ UPDATED VERSION
+const CACHE_NAME = 'swt-portal-v44'; // ⬅️ UPDATED VERSION
 const ASSETS_TO_CACHE = [
   './',
   './index.html', // Will be re-fetched and updated in the cache
@@ -21,7 +21,9 @@ const ASSETS_TO_CACHE = [
   './opthalmology.html',
   './pharmacology.html',
   './psychiatry.html',
-  './microbilogy.html', // ⬅️ NEW FILE ADDED
+  './microbilogy.html', 
+  './mock3_part1.html',// ⬅️ NEW FILE ADDED
+  './mock3_part2.html',// ⬅️ NEW FILE ADDED
 ];
 
 // 1. INSTALL: Cache resources
