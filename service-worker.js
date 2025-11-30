@@ -18,8 +18,9 @@ const ASSETS_TO_CACHE = [
   './Anatomy.html',
   './pathology.html',
   './parise.html',
-  './opthalmology.html'
-  './pharmacology.html', // ⬅️ NEW FILE ADDED
+  './opthalmology.html',
+  './pharmacology.html',
+  './psychiatry.html',// ⬅️ NEW FILE ADDED
 ];
 
 // 1. INSTALL: Cache resources
