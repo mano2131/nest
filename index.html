@@ -21,6 +21,7 @@
             --bg-color: #050510;
             --neon-blue: #00c6ff;
             --neon-purple: #bd34fe;
+            --neon-green: #2ecc71; /* NEW for completed tasks */
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
             --text-main: #ffffff;
@@ -106,7 +107,7 @@
             align-items: center;
         }
         
-        /* --- NEW: COUNTDOWN AREA (LEFT SIDE) --- */
+        /* --- COUNTDOWN AREA (LEFT SIDE) --- */
         .countdown-area {
             position: fixed;
             top: 20px;
@@ -114,6 +115,7 @@
             z-index: 100;
             display: flex;
             align-items: center;
+            gap: 10px; /* Space between timer and progress button */
         }
 
         #countdown-island {
@@ -138,6 +140,32 @@
             box-shadow: 0 0 15px var(--neon-blue);
             transform: scale(1.05);
             border-color: var(--neon-blue);
+        }
+        
+        /* NEW: PROGRESS BUTTON */
+        #progress-btn {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 0 15px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9em;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        #progress-btn:hover {
+            background: var(--neon-blue);
+            color: #fff;
+            box-shadow: 0 0 15px var(--neon-blue);
+            transform: translateY(-2px);
         }
 
         .control-btn {
@@ -313,6 +341,183 @@
             from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
+        
+        /* --- NEW: TASK MARKER STYLES --- */
+        .task-mark {
+            position: absolute;
+            top: 10px; /* Adjusted slightly */
+            right: 10px; /* Adjusted slightly */
+            width: 16px; /* Reduced from 22px */
+            height: 16px; /* Reduced from 22px */
+            border: 2px solid rgba(255,255,255,0.4);
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10; /* Above card content */
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .task-mark:hover { 
+            border-color: var(--neon-blue); 
+            transform: scale(1.15); 
+        }
+
+        .task-mark.completed {
+            background: var(--neon-green);
+            border-color: var(--neon-green);
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+        }
+
+        .task-mark.completed::after {
+            content: '✓';
+            color: #000;
+            font-size: 10px; /* Reduced from 14px */
+            font-weight: 900;
+        }
+        
+        /* --- NEW: PROGRESS MODAL STYLES --- */
+        #progress-modal {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: rgba(10, 15, 30, 0.95);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            border-radius: 24px;
+            z-index: 3000;
+            width: 90%; 
+            max-width: 400px;
+            color: white;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            opacity: 0; 
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        #progress-modal.show { 
+            opacity: 1; 
+            pointer-events: all; 
+            transform: translate(-50%, -50%) scale(1); 
+        }
+
+        .progress-header { 
+            font-size: 1.5em; 
+            font-weight: 800; 
+            color: var(--neon-blue); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .close-progress {
+            background: none;
+            border: none;
+            color: var(--text-sec);
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .close-progress:hover { color: #fff; }
+
+        .progress-stats-row { 
+            display: flex; 
+            gap: 12px; 
+            align-items: baseline; 
+        }
+        
+        .progress-big-num { 
+            font-size: 3.5em; 
+            font-weight: 800; 
+            color: white; 
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+        
+        .progress-total-text { 
+            color: var(--text-sec); 
+            font-size: 1.1em; 
+            font-weight: 500;
+        }
+
+        .progress-bar-container { 
+            width: 100%; 
+            height: 12px; 
+            background: rgba(255,255,255,0.1); 
+            border-radius: 10px; 
+            overflow: hidden; 
+            margin: 10px 0; 
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .progress-bar-fill { 
+            height: 100%; 
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple)); 
+            width: 0%; 
+            transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 0 10px rgba(189, 52, 254, 0.5);
+        }
+
+        .completed-list-container {
+            margin-top: 10px;
+        }
+        
+        .completed-list-title {
+            font-size: 0.85em;
+            text-transform: uppercase;
+            color: var(--text-sec);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .completed-list { 
+            max-height: 180px; 
+            overflow-y: auto; 
+            text-align: left; 
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 5px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .completed-item { 
+            padding: 10px 12px; 
+            border-bottom: 1px solid rgba(255,255,255,0.05); 
+            color: rgba(255,255,255,0.9); 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            font-size: 0.95em;
+        }
+        
+        .completed-item:last-child { border-bottom: none; }
+        
+        .completed-item::before { 
+            content: '✓'; 
+            color: var(--neon-green); 
+            font-weight: 900;
+            background: rgba(46, 204, 113, 0.2);
+            width: 20px; height: 20px;
+            display: flex; justify-content: center; align-items: center;
+            border-radius: 50%;
+            font-size: 0.8em;
+        }
+        
+        /* Scrollbar for the list */
+        .completed-list::-webkit-scrollbar { width: 4px; }
+        .completed-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+
 
         /* --- HEADER --- */
         .header-wrapper {
@@ -846,17 +1051,46 @@
         <div id="exam-back-text" onclick="closeExamAndReturn()">Go back to subjects</div>
     </div>
     
-    <!-- NEW: COUNTDOWN ISLAND (Left Side) -->
+    <!-- NEW: PROGRESS MODAL (Floating Window) -->
+    <div id="progress-modal">
+        <div class="progress-header">
+            <span>Your Progress</span>
+            <button class="close-progress" onclick="toggleProgressModal()">✕</button>
+        </div>
+        
+        <div class="progress-stats-row">
+            <span id="progress-big-num" class="progress-big-num">0</span>
+            <span id="progress-total-text" class="progress-total-text">/ 0 Tasks Completed</span>
+        </div>
+        
+        <div class="progress-bar-container">
+            <div id="progress-bar-fill" class="progress-bar-fill"></div>
+        </div>
+        
+        <div class="completed-list-container">
+            <div class="completed-list-title">Finished Subjects</div>
+            <div id="completed-list" class="completed-list">
+                <!-- Javascript will populate this -->
+                <div class="completed-item">No tasks finished yet...</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- COUNTDOWN AREA + NEW PROGRESS BUTTON -->
     <div class="countdown-area">
         <div id="countdown-island">
             <span>⏳</span>
             <span id="days-text">-- Days</span>
         </div>
+        <!-- New Progress Button -->
+        <button id="progress-btn" onclick="toggleProgressModal()">
+            📊 Progress
+        </button>
     </div>
 
     <div class="controls-area">
         <button id="installBtn" class="control-btn" title="Install App">⬇️</button>
-        <!-- NEW: ANIMATION TOGGLE BUTTON -->
+        <!-- ANIMATION TOGGLE BUTTON -->
         <div id="animBtn" class="control-btn" onclick="toggleAnimationControl()">
             <span class="btn-icon">🕊️</span>
             <span id="animText">Animation ON</span>
@@ -929,18 +1163,34 @@
                 <ul class="card-grid" id="nist-grid">
                     <!-- Color classes removed, style set dynamically by JS -->
                     <li data-name="physiology" data-cat="Preclinical"><div onclick="navigateAndMarkViewed(this, 'physiology.html')" class="subject-card"><strong>🫀 Physiology</strong><span>Test your knowledge in Physiology.</span></div></li>
-                    <li data-name="micro radio" data-cat="Preclinical"><div onclick="navigateAndMarkViewed(this, 'micro radio.html')" class="subject-card"><strong>🔬 Micro and Radio</strong><span>Quizzes on Microbiology and Radiology.</span></div></li>
+                    <li data-name="radio" data-cat="Preclinical"><div onclick="navigateAndMarkViewed(this, 'micro radio.html')" class="subject-card"><strong>☢️ Radiology</strong><span>“A picture is worth a thousand differential diagnoses.”</span></div></li>                    
                     <li data-name="fmt" data-cat="Clinical"><div onclick="navigateAndMarkViewed(this, 'fmt.html')" class="subject-card"><strong>⚖️ FMT</strong><span>Forensic Medicine and Toxicology.</span></div></li>
                     <li data-name="anasthesia" data-cat="Small"><div onclick="navigateAndMarkViewed(this, 'anasthesia.html')" class="subject-card"><strong>💉 Anesthesia</strong><span>Test your Anesthesia skills.</span></div></li>
                     <li data-name="paediatrics" data-cat="Clinical"><div onclick="navigateAndMarkViewed(this, 'paediatrics.html')" class="subject-card"><strong>👶 Paediatrics</strong><span>Quizzes dedicated to Paediatrics.</span></div></li>
-                    <li data-name="derma and psych" data-cat="Small"><div onclick="navigateAndMarkViewed(this, 'derma and psych.html')" class="subject-card"><strong>🧠 Dermatology & Psych</strong><span>Advanced topics.</span></div></li>                                    
-                    <!-- Mock 2 card still has data-is-new="true" on the LI -->
+<li data-name="derma" data-cat="Small"><div onclick="navigateAndMarkViewed(this, 'derma and psych.html')" class="subject-card"><strong>🩹 Dermatology</strong><span>“Healthy skin is a reflection of overall wellness.”</span></div></li>                    <!-- Mock 2 card still has data-is-new="true" on the LI -->
                     <li data-name="mock 2" data-cat="Mock"><div onclick="navigateAndMarkViewed(this, 'mock2.html')" class="subject-card"><strong>📝 Mock 2</strong><span>12 November Mock2 q. 137.</span></div></li>
+                    
+                    <!-- NEW MOCK TEST 3 CARD SPLIT -->
+                    <li data-name="mock 3" data-cat="Mock">
+                        <div class="subject-card" style="cursor: default; display: flex; flex-direction: column;">
+                            <strong>📝 Mock Test 3</strong>
+                            <div style="display: flex; gap: 10px; margin-top: 5px; width: 100%; flex-grow: 1;">
+                                <div onclick="navigateAndMarkViewed(this, 'mock3_part1.html')" style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                    <strong style="font-size: 1em; margin: 0;">Part 1</strong>
+                                </div>
+                                <div onclick="navigateAndMarkViewed(this, 'mock3_part2.html')" style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                    <strong style="font-size: 1em; margin: 0;">Part 2</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
                     <li data-name="biochem" data-cat="Preclinical"><div onclick="navigateAndMarkViewed(this, 'biochem final.html')" class="subject-card"><strong>🧬 Biochemistry</strong><span>Path for a million possibilities.</span></div></li>
                     <li data-name="anatomy" data-cat="Preclinical" ><div onclick="navigateAndMarkViewed(this, 'Anatomy.html')" class="subject-card"><strong>🦴 Anatomy</strong><span>"Anatomy is destiny."</span></div></li>
                     <li data-name="pathology" data-cat="Preclinical" ><div onclick="navigateAndMarkViewed(this, 'pathology.html')" class="subject-card"><strong>🦠 Pathology</strong><span>"Small cells. Big stories."</span></div></li>
                     <li data-name="oph" data-cat="Clinical"><div onclick="navigateAndMarkViewed(this, 'opthalmology.html')" class="subject-card"><strong>👁️ Ophthalmology</strong><span>"हँसी थमी है इन आँखों में यूँ नमी की तरह, चमक उठे हैं अंधेरे भी रौशनी की तरह"</span></div></li>
                     <li data-name="pha" data-cat="Preclinical" data-is-new="true"><div onclick="navigateAndMarkViewed(this, 'pharmacology.html')" class="subject-card"><strong>💊 Pharmacology</strong><span>“All things are poison, and nothing is without poison; only the dose makes a thing not a poison.”</span></div></li>
+                    <li data-name="psy" data-cat="small"><div onclick="navigateAndMarkViewed(this, 'psychiatry.html')" class="subject-card"><strong>🧠 Psychiatry</strong><span>“A failure to diagnose is an invitation to treat the symptom rather than the disease.”</span></div></li>
                 </ul>
             </div>
 
@@ -1098,12 +1348,124 @@
         window.onload = () => {
             initVanta(savedTheme);
             setDynamicCardColors(); // Set colors on load
+            initTaskMarkers(); // NEW: Initialize markers
+            
             // DEFAULT VIEW: Trigger Profs Sort
             sortCards('PROFS', null); 
             // NEW: Start Countdown
             updateCountdown();
             setInterval(updateCountdown, 60000); // Update every minute
         };
+        
+        // --- NEW: TASK COMPLETION LOGIC ---
+        
+        function initTaskMarkers() {
+            // Add dots to all cards
+            document.querySelectorAll('.subject-card').forEach(card => {
+                // Check if already added to avoid duplicates if re-run
+                if(card.querySelector('.task-mark')) return;
+
+                const parentLi = card.closest('li');
+                if(!parentLi) return;
+                
+                const taskName = parentLi.getAttribute('data-name') || parentLi.innerText.split('\n')[0].trim();
+                
+                const dot = document.createElement('div');
+                dot.className = 'task-mark';
+                dot.onclick = (e) => toggleTaskStatus(e, taskName, dot);
+                
+                // Load state from storage
+                const savedTasks = JSON.parse(localStorage.getItem('swt_portal_tasks') || '{}');
+                if(savedTasks[taskName]) {
+                    dot.classList.add('completed');
+                }
+                
+                card.appendChild(dot);
+                card.style.position = 'relative'; // Ensure absolute positioning works
+            });
+        }
+
+        function toggleTaskStatus(event, taskName, dotElement) {
+            event.stopPropagation(); // Prevent card click navigation
+            
+            const savedTasks = JSON.parse(localStorage.getItem('swt_portal_tasks') || '{}');
+            const isComplete = !savedTasks[taskName]; // Toggle
+            
+            savedTasks[taskName] = isComplete;
+            localStorage.setItem('swt_portal_tasks', JSON.stringify(savedTasks));
+            
+            // Update Visuals
+            if(isComplete) {
+                dotElement.classList.add('completed');
+                showMessage(`Task "${taskName}" marked as completed!`, "success", 2000);
+            } else {
+                dotElement.classList.remove('completed');
+            }
+            
+            updateProgressModalData(); // Refresh modal data if open
+        }
+
+        // --- NEW: PROGRESS MODAL LOGIC ---
+        
+        function toggleProgressModal() {
+            const modal = document.getElementById('progress-modal');
+            const isShowing = modal.classList.contains('show');
+            
+            if(!isShowing) {
+                updateProgressModalData(); // Refresh data before showing
+                modal.classList.add('show');
+            } else {
+                modal.classList.remove('show');
+            }
+        }
+        
+        function updateProgressModalData() {
+            // Count total items
+            const allItems = document.querySelectorAll('li[data-name], li[data-cat] .subject-card'); // Trying to catch all cards
+            // Since we added dots to .subject-card, let's count dots
+            const totalDots = document.querySelectorAll('.task-mark').length;
+            
+            // Count completed
+            const savedTasks = JSON.parse(localStorage.getItem('swt_portal_tasks') || '{}');
+            let completedCount = 0;
+            const completedNames = [];
+            
+            // Iterate over storage keys, but verify they exist in DOM (in case of stale data)
+            // Or just trust storage for now, but better to match current cards
+            document.querySelectorAll('.task-mark').forEach(dot => {
+                if(dot.classList.contains('completed')) {
+                    completedCount++;
+                    // Find name
+                    const card = dot.closest('.subject-card');
+                    const li = card.closest('li');
+                    const name = li.getAttribute('data-name') || card.querySelector('strong').innerText;
+                    completedNames.push(name);
+                }
+            });
+
+            // Update DOM
+            document.getElementById('progress-big-num').innerText = completedCount;
+            document.getElementById('progress-total-text').innerText = `/ ${totalDots} Tasks Completed`;
+            
+            // Update Bar
+            const percent = totalDots > 0 ? (completedCount / totalDots) * 100 : 0;
+            document.getElementById('progress-bar-fill').style.width = `${percent}%`;
+            
+            // Update List
+            const listContainer = document.getElementById('completed-list');
+            listContainer.innerHTML = ''; // Clear
+            
+            if(completedNames.length === 0) {
+                listContainer.innerHTML = '<div class="completed-item" style="justify-content:center; opacity:0.5;">No tasks finished yet...</div>';
+            } else {
+                completedNames.forEach(name => {
+                    const div = document.createElement('div');
+                    div.className = 'completed-item';
+                    div.innerText = name;
+                    listContainer.appendChild(div);
+                });
+            }
+        }
         
         // --- NEW: COUNTDOWN LOGIC ---
         function updateCountdown() {
@@ -1216,7 +1578,7 @@
             // headerSub.innerText = "created by mano"; (Kept constant)
             glowingWelcome.innerText = `WELCOME, ${username.toUpperCase()}`;
             glowingWelcome.style.display = 'block';
-
+            
             // Ensure sorting is applied after display block
             setTimeout(() => sortCards('PROFS', null), 100);
         }
@@ -1419,6 +1781,11 @@
                 }
             }
             
+            // RE-INIT MARKERS AFTER SORT
+            // Because we cleared innerHTML and rebuilt it from cached LIs, 
+            // the LIs still have the dots (since we appended to cached LI).
+            // But just in case, we can check. (Actually, cached elements retain their DOM changes).
+            
             const island = document.getElementById('dynamic-sort');
             if(island) setTimeout(() => island.classList.remove('expanded'), 300);
         }
@@ -1507,7 +1874,8 @@
 
             if (targetLi) {
                 // Determine which folder the new card belongs to
-                const parentFolderId = targetLi.closest('.folder-view').id;
+                const parentFolderId = targetLi.closest('.folder-view.active-folder') ? 
+                    targetLi.closest('.folder-view').id : 'NIST'; // Default to NIST if not clearly found
                 
                 // 1. Switch to the correct Folder (NOW RESPECTS SORT MODE)
                 switchFolder(parentFolderId, null);
@@ -1555,8 +1923,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
