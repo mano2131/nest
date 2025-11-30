@@ -20,7 +20,8 @@ const ASSETS_TO_CACHE = [
   './parise.html',
   './opthalmology.html',
   './pharmacology.html',
-  './psychiatry.html',// ⬅️ NEW FILE ADDED
+  './psychiatry.html',
+  './microbilogy.html', // ⬅️ NEW FILE ADDED
 ];
 
 // 1. INSTALL: Cache resources
