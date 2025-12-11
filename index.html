@@ -1169,7 +1169,7 @@
                     <li data-name="paediatrics" data-cat="Clinical"><div onclick="navigateAndMarkViewed(this, 'paediatrics.html')" class="subject-card"><strong>👶 Paediatrics</strong><span>Quizzes dedicated to Paediatrics.</span></div></li>
                     <li data-name="derma" data-cat="Small"><div onclick="navigateAndMarkViewed(this, 'derma and psych.html')" class="subject-card"><strong>🩹 Dermatology</strong><span>“Healthy skin is a reflection of overall wellness.”</span></div></li>                    <!-- Mock 2 card still has data-is-new="true" on the LI -->
                     <li data-name="mock 2" data-cat="Mock"><div onclick="navigateAndMarkViewed(this, 'mock2.html')" class="subject-card"><strong>📝 Mock 2</strong><span>12 November Mock2 q. 137.</span></div></li>
-                    <li data-name="derma" data-cat="small"data-is-new="true"><div onclick="navigateAndMarkViewed(this, 'orthopedics.html')" class="subject-card"><strong>🦴 Orthopedics</strong><span>“Movement is life.”</span></div></li>
+                    <li data-name="derma" data-cat="small"><div onclick="navigateAndMarkViewed(this, 'orthopedics.html')" class="subject-card"><strong>🦴 Orthopedics</strong><span>“Movement is life.”</span></div></li>
                     <li data-name="micro" data-cat="preclinical"><div onclick="navigateAndMarkViewed(this, 'microbiology.html')" class="subject-card"><strong>🦠 Microbiology</strong><span>“The little things are infinitely the most important.”</span></div></li>
                     <!-- NEW MOCK TEST 3 CARD SPLIT -->
                     <li data-name="mock 3" data-cat="Mock"data-is-new="true">
@@ -1185,6 +1185,22 @@
                             </div>
                         </div>
                     </li>
+                    <li data-name="med" data-cat="clinical"data-is-new="true">
+                        <div class="subject-card" style="cursor: default; display: flex; flex-direction: column;">
+                            <strong>🩺 Medicine</strong>
+                            <div style="display: flex; gap: 10px; margin-top: 5px; width: 100%; flex-grow: 1;">
+                                <div onclick="navigateAndMarkViewed(this, 'medicine.html')" style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                    <strong style="font-size: 1em; margin: 0;">SINGARAM sir</strong>
+                                </div>
+                                <div onclick="navigateAndMarkViewed(this, 'medicine1.html')" style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                    <strong style="font-size: 1em; margin: 0;">KUNAl sir</strong>
+                                </div>
+                                 <div onclick="navigateAndMarkViewed(this, 'medicine2.html')" style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
+                                    <strong style="font-size: 1em; margin: 0;">S.patil sir</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
 
                     <li data-name="biochem" data-cat="Preclinical"><div onclick="navigateAndMarkViewed(this, 'biochem final.html')" class="subject-card"><strong>🧬 Biochemistry</strong><span>Path for a million possibilities.</span></div></li>
                     <li data-name="anatomy" data-cat="Preclinical" ><div onclick="navigateAndMarkViewed(this, 'Anatomy.html')" class="subject-card"><strong>🦴 Anatomy</strong><span>"Anatomy is destiny."</span></div></li>
@@ -1193,7 +1209,7 @@
                     <li data-name="pha" data-cat="Preclinical" ><div onclick="navigateAndMarkViewed(this, 'pharmacology.html')" class="subject-card"><strong>💊 Pharmacology</strong><span>“All things are poison, and nothing is without poison; only the dose makes a thing not a poison.”</span></div></li>
                     <li data-name="psy" data-cat="small"><div onclick="navigateAndMarkViewed(this, 'psychiatry.html')" class="subject-card"><strong>🧠 Psychiatry</strong><span>“A failure to diagnose is an invitation to treat the symptom rather than the disease.”</span></div></li>
                     <li data-name="surg" data-cat="Clinical"><div onclick="navigateAndMarkViewed(this, 'surgery.html')" class="subject-card"><strong>😷 Surgery</strong><span>"see image for quistion 42"</span></div></li>
-                    <li data-name="med" data-cat="Clinical"data-is-new="true"><div onclick="navigateAndMarkViewed(this, 'medicine.html')" class="subject-card"><strong>🩺 Medicine</strong><span>"SINGARAM SIR"</span></div></li>
+                   
                 </ul>
             </div>
 
@@ -1926,6 +1942,7 @@
     </script>
 </body>
 </html>
+
 
 
 
